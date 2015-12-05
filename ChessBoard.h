@@ -1,3 +1,7 @@
+//ChessBoard.cpp
+
+#ifndef CHESSBOARD_H
+#define CHESSBOARD_H
 
 class ChessBoard{
 /* Describe ChessBoard in here */
@@ -40,3 +44,4 @@ private:
   
   
 }
+#endif
