@@ -5,5 +5,5 @@
 class Queen: public ChessPiece{
 public:
   Queen( colour_t _col, char _charPiece );
-}
+};
 #endif 

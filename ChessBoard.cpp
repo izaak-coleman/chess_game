@@ -1,17 +1,23 @@
 # include <iostream>/* std::cin, std::cout, std::cerr */
-# include <map>     /* std::map */
 # include <vector>  /* std::vector */
 # include <utility> /* std::pair */
 
 # include "ChessBoard.h"
 # include "ChessPiece.h"
 
+# include "Pawn.h"
+# include "Rook.h"
+# include "Knight.h"
+# include "Bishop.h"
+# include "King.h"
+# include "Queen.h"
+
 using namespace std;
 
-ChessBoard::ChessBoard
+ChessBoard::ChessBoard()
 {
   loadStartPositions();
-  move = WHITE; 
+  turn = WHITE; 
 }
 
 void ChessBoard::loadStartPositions()
@@ -32,77 +38,74 @@ void ChessBoard::loadStartPositions()
 
 }
 
-pair< SquareID, *ChessPiece > ChessBoard::allocatePiece( SquareID square )
+pair< ChessBoard::SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
 {
   /* Get rank and file allocated to square. */
-  int rank = square.first();
-  int file = square.second();
+  int rank = square.first;
+  int file = square.second;
   ChessPiece *cp;
 
   
   /* Allocate Pieces for 'White Side' of the chessboard; ranks 1-2 */
   if( rank == 1 && (file == 1 || file == 8) ){
-    cp = new Rook( WHITE );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Rook( WHITE, 'R' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 2 || file == 7) ){
-    cp = new Knight( WHITE );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Knight( WHITE, 'H' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 3 || file == 6) ){
-    cp = new Bishop( WHITE );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Bishop( WHITE, 'B' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 4 ) ){
-    cp = new King( WHITE );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new King( WHITE, 'K' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 5 ) ) {
-    cp = new Queen( WHITE );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Queen( WHITE, 'Q' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 2 && ( file >= 1 && file <= 8 ) ){
-    cp = new Pawn( WHITE );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Pawn( WHITE, 'W' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
 
 
   /* Allocate no peices (NULL) to ranks 3 - 6. */
-  if( (rank > 2 && rank < 8) && (file >= 1 && file <= 8){
+  if( (rank > 2 && rank < 7) && (file >= 1 && file <= 8) ){
     cp = NULL;
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
 
 
   /* Allocate ChessPeices for 'Black Side' of chessboard; ranks 7-8. */
   if( rank == 8 && (file == 1 || file == 8) ){
-    cp = new Rook( BLACK );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Rook( BLACK, 'R' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 2 || file == 7) ){
-    cp = new Knight( BLACK );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Knight( BLACK, 'H' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 3 || file == 6) ){
-    cp = new Bishop( BLACK );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Bishop( BLACK, 'B' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 4 ) ){
-    cp = new King( BLACK );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new King( BLACK, 'K' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 5 ) ){
-    cp = new Queen( BLACK );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Queen( BLACK, 'Q' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 9 && ( file >=1 && file <= 8 ) ){
-    cp = new Pawn( BLACK );
-    return pair< SquareID, *ChessPiece > ( square, cp );
+    cp = new Pawn( BLACK, 'B' );
+    return pair< SquareID, ChessPiece* > ( square, cp );
   }
-  
-  else{ // Given rank and file out of range. Throw exptn.
-    /* Throw exptn */
-  }
+  else{ /* Throw error*/}
 }
 
 
@@ -117,8 +120,10 @@ void ChessBoard::print_row( const Board &cb, int rank ) {
   cout << static_cast< char > ( rank ) << " ";
   for ( int file = 1; file <= MAX_FILE; file++ ) {
     cout << "|" << " ";
-    if( cb.find( rank, file)->charpiece != NULL ){
-      cout << cb[ make_pair(rank,file) ]->charpiece;
+    SquareID square ( rank, file );
+    ChessPiece *piece = cb.find( square )->second;
+    if( ( piece != NULL ) ){
+      cout << piece->charpiece;
     }
     else{
       cout << " ";
@@ -130,12 +135,12 @@ void ChessBoard::print_row( const Board &cb, int rank ) {
 /* pre-supplied function to display a Sudoku board */
 void ChessBoard::display_board( const Board &cb ){
   cout << "    ";
-  for (int rank = 1; r <= MAX_RANK; rank++) 
-    cout << (char) ('1'+r) << "   ";
+  for (int rank = 1; rank <= MAX_RANK; rank++) 
+    cout << (char) ('1'+rank) << "   ";
   cout << endl;
-  for (int rank = 1; r < MAX_RANK; rank++) {
+  for (int rank = 1; rank < MAX_RANK; rank++) {
     print_frame();
-    print_row( cb );
+    print_row( cb, rank );
   }
   print_frame();
 }
