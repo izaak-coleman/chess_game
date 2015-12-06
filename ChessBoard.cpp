@@ -1,6 +1,6 @@
 # include <iostream>/* std::cin, std::cout, std::cerr */
-# include <vector>  /* std::vector */
 # include <utility> /* std::pair */
+# include <string>  /* std::string */
 
 # include "ChessBoard.h"
 # include "ChessPiece.h"
@@ -22,16 +22,15 @@ ChessBoard::ChessBoard()
 
 void ChessBoard::loadStartPositions()
 {
-  pair< Board::iterator, bool > validInsert;      // Stores last insertion info.
+  pair< Board::iterator, bool > validInsert;   // Info: validity of last insert
   
-  for( int rank=1; rank <= MAX_RANK; rank++ ){
+  for( int rank=1; rank <= MAX_RANK; rank++ ){ // cycle board allocating pieces
     for( int file=1; file <= MAX_FILE; file++ ){  
 
       SquareID square ( rank, file );             // Generate a square 
       validInsert = chessboard.insert( allocatePiece( square ) );
 
-      if( validInsert.second == false ){          // handle insert fail 
-        /* Throw an error */
+      if( validInsert.second == false ){          // check validty, handle fail
       }
     }
   }
@@ -48,27 +47,27 @@ pair< ChessBoard::SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID sq
   
   /* Allocate Pieces for 'White Side' of the chessboard; ranks 1-2 */
   if( rank == 1 && (file == 1 || file == 8) ){
-    cp = new Rook( WHITE, 'R' );
+    cp = new Rook( WHITE, "WR" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 2 || file == 7) ){
-    cp = new Knight( WHITE, 'H' );
+    cp = new Knight( WHITE, "WH" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 3 || file == 6) ){
-    cp = new Bishop( WHITE, 'B' );
+    cp = new Bishop( WHITE, "WB" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 4 ) ){
-    cp = new King( WHITE, 'K' );
+    cp = new King( WHITE, "WK");
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 5 ) ) {
-    cp = new Queen( WHITE, 'Q' );
+    cp = new Queen( WHITE, "WQ" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 2 && ( file >= 1 && file <= 8 ) ){
-    cp = new Pawn( WHITE, 'W' );
+    cp = new Pawn( WHITE, "WP" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
 
@@ -82,51 +81,118 @@ pair< ChessBoard::SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID sq
 
   /* Allocate ChessPeices for 'Black Side' of chessboard; ranks 7-8. */
   if( rank == 8 && (file == 1 || file == 8) ){
-    cp = new Rook( BLACK, 'R' );
+    cp = new Rook( BLACK, "BR");
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 2 || file == 7) ){
-    cp = new Knight( BLACK, 'H' );
+    cp = new Knight( BLACK, "BH" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 3 || file == 6) ){
-    cp = new Bishop( BLACK, 'B' );
+    cp = new Bishop( BLACK, "BB" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 4 ) ){
-    cp = new King( BLACK, 'K' );
+    cp = new King( BLACK, "BK" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 5 ) ){
-    cp = new Queen( BLACK, 'Q' );
+    cp = new Queen( BLACK, "BQ" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
-  else if( rank == 9 && ( file >=1 && file <= 8 ) ){
-    cp = new Pawn( BLACK, 'B' );
+  else if( rank == 7 && ( file >=1 && file <= 8 ) ){
+    cp = new Pawn( BLACK, "BP" );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else{ /* Throw error*/}
+}
+
+bool ChessBoard::submitMove( const string source, const string dest )
+{
+  SquareID sourceSq ( (source.at(1)-48), (source.at(0)-64) );  // get source ID
+  SquareID destSq   ( (dest.at(1)-48), (dest.at(0)-64) );      // get dest ID
+
+  invalidSourceSq( sourceSq );            // check turn owns piece to be moved
+  invalidDestSq ( destSq );         // check turn's does not have peice at dest
+
+  ChessPiece *movingPiece;          // will be assigned to the piece as source
+  movingPiece = chessboard.find( sourceSq )->second;
+  movingPiece->tryMove( destSq );   // try to move piece to destination square
+
+  
+
+  return true;
+
+}
+
+void ChessBoard::invalidSourceSq( const SquareID &sourceSq )
+{
+  ChessPiece *piece;
+  piece = chessboard.find( sourceSq )-> second; // return pointer to ChessPiece
+
+  /* Need some range checking*/
+
+  if( piece != NULL && piece->getColour() != turn )
+  {
+    cerr << (( turn == WHITE ) ? "White" : "Black") << " cannot move"
+         << " chess piece at "<< static_cast<char> (sourceSq.second+64)
+         << static_cast<char> (sourceSq.first+48) << "." << endl
+         << "This piece is owned by the opposite player." << endl;
+  }
+  else if( piece == NULL )
+  {
+    cerr << "Invalid move from " << (( turn == WHITE ) ? "White." : "Black." )
+         << endl << "No chess piece located at "
+         << static_cast<char> (sourceSq.second+64)
+         << static_cast<char> (sourceSq.first+48) << "." << endl;
+  }
+}
+
+void ChessBoard::invalidDestSq( const SquareID &destSq )
+{
+  ChessPiece *piece;
+  piece = chessboard.find( destSq )-> second;  // return pointer to ChessPiece
+
+  /* Need some range checking */
+
+  if( piece != NULL && piece->getColour() == turn ){
+    cerr << "Invalid move from " << (( turn == WHITE ) ? "White." : "Black." )
+         << endl << "Cannot take your own chess piece located at "
+         << static_cast<char> (destSq.second+64)
+         << static_cast<char> (destSq.first+48) << "." << endl;
+  }
+}
+
+
+ChessBoard::Board ChessBoard::getBoard()
+{
+  return chessboard;
+}
+
+colour_t ChessBoard::getTurn()
+{
+  return turn;
 }
 
 
 
 /* internal helper function */
 void ChessBoard::print_frame() {
-    cout << "  +===========+===========+===========+" << endl;
+    cout << "  +===========+===========+" << endl;
 }
 
 /* internal helper function */
 void ChessBoard::print_row( const Board &cb, int rank ) {
-  cout << static_cast< char > ( rank ) << " ";
+  cout << static_cast< char > ( 48+rank ) << " ";
   for ( int file = 1; file <= MAX_FILE; file++ ) {
-    cout << "|" << " ";
+    cout << "|";
     SquareID square ( rank, file );
     ChessPiece *piece = cb.find( square )->second;
     if( ( piece != NULL ) ){
       cout << piece->charpiece;
     }
     else{
-      cout << " ";
+      cout << "e ";
     }
   }
   cout << "|" << endl;
@@ -134,11 +200,11 @@ void ChessBoard::print_row( const Board &cb, int rank ) {
 
 /* pre-supplied function to display a Sudoku board */
 void ChessBoard::display_board( const Board &cb ){
-  cout << "    ";
-  for (int rank = 1; rank <= MAX_RANK; rank++) 
-    cout << (char) ('1'+rank) << "   ";
+  cout << "   ";
+  for (int file = 1; file <= MAX_FILE; file++) 
+    cout << static_cast<char> (64+file) << "  ";
   cout << endl;
-  for (int rank = 1; rank < MAX_RANK; rank++) {
+  for (int rank = 1; rank <= MAX_RANK; rank++) {
     print_frame();
     print_row( cb, rank );
   }

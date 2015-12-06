@@ -1,12 +1,14 @@
 //ChessBoard.h
 
-#ifndef CHESSBOARD_H
-#define CHESSBOARD_H
+# ifndef CHESSBOARD_H
+# define CHESSBOARD_H
 
-#include <map>
-#include <utility>
+# include <map>       /* std::map */
+# include <utility>   /* std::pair */
+# include <string>    /* std::string */
 
-#include "ChessPiece.h"
+
+# include "ChessPiece.h"
 
 static const int MAX_RANK = 8;
 static const int MAX_FILE = 8;
@@ -17,17 +19,33 @@ public:
   typedef std::pair< int, int > SquareID;
   typedef std::map< SquareID, ChessPiece* > Board;
 
+  ChessBoard();
+  /* Calls loadStartPositions, sets move to WHITE */
+
+  bool submitMove( const std::string source, const std::string dest );
+  /* Moves ChessPiece from source to dest. Main gameplay function.
+   * Check piece at source, belongs to player whose turn it is to move.
+   * Checks if move is legal. If chesspiece at dest belongs to player 
+   * whos turn it is not, the peice will be taken (deleted) */
+
+  void display_board( const Board &cb );
+  /* Visual display of the chessboard. */
+
+  Board getBoard();
+  /* Returns the chessboard */
+  
+  colour_t getTurn();
+  /* Returns who needs to make the next move. */
+
 private:
 
   /* Attributes */
-  colour_t turn;
-
-  Board chessboard;
-
+  colour_t turn;          // Switches after each successful turn
+  Board chessboard;       // Chessboard maps squares to chesspieces
+  SquareID sourceSq;      // Current location of the next piece to be moved
+  SquareID destSq;        // Destination of the next piece to be moved
    
   /* Member Functions */
-  ChessBoard();
-  /* Calls loadStartPositions, sets move to WHITE */
 
   void loadStartPositions();
   /* PreCondition:  chessboard member empty.
@@ -39,12 +57,19 @@ private:
      has a rank and file. The Subclass of ChessPiece assigned to the
      square corresponds to this rank and file. */
 
-  void display_board( const Board &cb );
-  void print_frame();
   void print_row( const Board &cb, int rank );
   /* Prints the chessboard to the screen. */
   /* Sets up board with mapped chess pieces */
- // bool submitMove( char* sourceSq, char* destSq );
+  void print_frame();
+
+  void invalidSourceSq( const SquareID &sourceSq );
+  /* Throws error if the colour_t of the chessPiece at square sourceSq
+   * matches does not match turn. */
+
+  void invalidDestSq( const SquareID &destSq );
+  /* Throws error if a chess piece is located at destSq, and this chess piece
+   * is of the same colour_t as turn*/
+
  // /*void updateBoard( ... ); */
  // bool displayGameStatus();
  // int  checkGameStatus();

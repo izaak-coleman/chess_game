@@ -1,0 +1,5 @@
+to do
+ - need to add range checking for invalidSourceSq
+ - need to add range checking for invalidDestSq
+ - need to move charpiece to private
+ 

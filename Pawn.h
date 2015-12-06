@@ -1,10 +1,12 @@
-#ifndef PAWN_H
-#define PAWN_H
-  
-#include "ChessPiece.h"
+# ifndef PAWN_H
+# define PAWN_H
+
+# include <string> /* std::string */
+   
+# include "ChessPiece.h"
 
 class Pawn: public ChessPiece{
 public:
-  Pawn( colour_t _col, char _charPiece );
+  Pawn( colour_t _col, std::string _charPiece );
 };
 #endif

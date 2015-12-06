@@ -1,12 +1,14 @@
-#ifndef BISHOP_H
-#define BISHOP_H
+# ifndef BISHOP_H
+# define BISHOP_H
 
-#include "ChessPiece.h"
+# include <string> /* std::string */
+
+# include "ChessPiece.h"
 
 class Bishop: public ChessPiece{
 
 public:
-  Bishop( colour_t _col, char _charPiece );
+  Bishop( colour_t _col, std::string _charPiece );
 };
 
 #endif
