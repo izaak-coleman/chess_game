@@ -1,7 +1,12 @@
-//ChessBoard.cpp
+//ChessBoard.h
 
 #ifndef CHESSBOARD_H
 #define CHESSBOARD_H
+
+#include "ChessPiece.h"
+
+static const int MAX_RANK = 8;
+static const int MAX_FILE = 8;
 
 class ChessBoard{
 /* Describe ChessBoard in here */
@@ -38,10 +43,5 @@ private:
  // bool displayGameStatus();
  // int  checkGameStatus();
  // Board updateBoard;
-  
-  
-  
-  
-  
-}
+};
 #endif

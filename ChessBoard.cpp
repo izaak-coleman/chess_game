@@ -3,6 +3,7 @@
 # include <vector>  /* std::vector */
 # include <utility> /* std::pair */
 
+# include "ChessBoard.h"
 # include "ChessPiece.h"
 
 using namespace std;
