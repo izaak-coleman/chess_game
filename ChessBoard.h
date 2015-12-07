@@ -25,6 +25,12 @@ class ChessBoard{
    * Checks if move is legal. If chesspiece at dest belongs to player 
    * whos turn it is not, the peice will be taken (deleted) */
 
+  void movePiece( ChessPiece* movingPiece, SquareID destSq );
+  /* Helper function to submitMove. If submitMove identifies
+   * move as valid, then movePiece configures chessboard map
+   * to move the piece. If a is located at destSq, it is 
+   * deleted. */
+
   void display_board( const Board &cb );
   /* Visual display of the chessboard. */
 

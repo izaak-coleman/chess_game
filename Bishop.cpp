@@ -2,7 +2,7 @@
 # include <string> /* std::string */
 
 # include "Bishop.h"
-# include "Type.h"
+# include "Types.h"
 # include "ChessPiece.h"
 
 using namespace std;

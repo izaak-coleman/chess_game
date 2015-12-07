@@ -15,3 +15,14 @@ colour_t ChessPiece::getColour()
   return colour;
 }
 
+SquareID ChessPiece::getCurrentLoc()
+{
+  return currentLoc;
+}
+
+void ChessPiece::setCurrentLoc( SquareID destSq )
+{
+  currentLoc = destSq;
+}
+
+ChessPiece::~ChessPiece(){}
