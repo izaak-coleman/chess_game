@@ -7,7 +7,7 @@
 using namespace std;
 
 ChessPiece::ChessPiece( colour_t _col, string _cp, SquareID _loc )
-: colour( _col ), charpiece( _cp )
+: colour( _col ), currentLoc( _loc ), charpiece( _cp )
 {}
 
 colour_t ChessPiece::getColour()

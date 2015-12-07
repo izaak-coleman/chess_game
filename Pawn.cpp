@@ -16,9 +16,12 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
 {
   int destRank;
   destRank = destSq.first;
+  cout << "Reached in here. currentLoc is " << currentLoc.first << " "
+       << currentLoc.second << endl;
 
   if( colour == WHITE && currentLoc.first == 2 ){ // WHITE Pawn at start
     if( destRank == 3 || destRank == 4 ){         // can move two places
+    cout << "White pawn returned true " << endl;
       return true;                                // return move valid
     }
   }

@@ -47,31 +47,31 @@ pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
 
   
   /* Allocate Pieces for 'White Side' of the chessboard; ranks 1-2 */
-//  if( rank == 1 && (file == 1 || file == 8) ){
-//    SquareID currentLoc ( rank, file );
-//    cp = new Rook( WHITE, "WR", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
-//  else if( rank == 1 && (file == 2 || file == 7) ){
-//    SquareID currentLoc ( rank, file );
-//    cp = new Knight( WHITE, "WH", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
-//  else if( rank == 1 && (file == 3 || file == 6) ){
-//    SquareID currentLoc ( rank, file );
-//    cp = new Bishop( WHITE, "WB", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
-//  else if( rank == 1 && (file == 4 ) ){
-//    SquareID currentLoc ( rank, file );
-//    cp = new King( WHITE, "WK", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
-//  else if( rank == 1 && (file == 5 ) ) {
-//    SquareID currentLoc ( rank, file );
-//    cp = new Queen( WHITE, "WQ", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
+    if( rank == 1 && (file == 1 || file == 8) ){
+      SquareID currentLoc ( rank, file );
+      cp = new Rook( WHITE, "WR", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
+    else if( rank == 1 && (file == 2 || file == 7) ){
+      SquareID currentLoc ( rank, file );
+      cp = new Knight( WHITE, "WH", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
+    else if( rank == 1 && (file == 3 || file == 6) ){
+      SquareID currentLoc ( rank, file );
+      cp = new Bishop( WHITE, "WB", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
+    else if( rank == 1 && (file == 4 ) ){
+      SquareID currentLoc ( rank, file );
+      cp = new King( WHITE, "WK", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
+    else if( rank == 1 && (file == 5 ) ) {
+      SquareID currentLoc ( rank, file );
+      cp = new Queen( WHITE, "WQ", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
    if( rank == 2 && ( file >= 1 && file <= 8 ) ){
     SquareID currentLoc ( rank, file );
     cp = new Pawn( WHITE, "WP", currentLoc );
@@ -86,32 +86,32 @@ pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
   }
 
 
-//  /* Allocate ChessPeices for 'Black Side' of chessboard; ranks 7-8. */
-//  if( rank == 8 && (file == 1 || file == 8) ){
-//    SquareID currentLoc ( rank, file );
-//    cp = new Rook( BLACK, "BR", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
-//  else if( rank == 8 && (file == 2 || file == 7) ){
-//    SquareID currentLoc ( rank, file );
-//    cp = new Knight( BLACK, "BH", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
-//  else if( rank == 8 && (file == 3 || file == 6) ){
-//    SquareID currentLoc ( rank, file );
-//    cp = new Bishop( BLACK, "BB", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
-//  else if( rank == 8 && (file == 4 ) ){
-//    SquareID currentLoc ( rank, file );
-//    cp = new King( BLACK, "BK", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
-//  else if( rank == 8 && (file == 5 ) ){
-//    SquareID currentLoc ( rank, file );
-//    cp = new Queen( BLACK, "BQ", currentLoc );
-//    return pair< SquareID, ChessPiece* > ( square, cp );
-//  }
+    /* Allocate ChessPeices for 'Black Side' of chessboard; ranks 7-8. */
+    if( rank == 8 && (file == 1 || file == 8) ){
+      SquareID currentLoc ( rank, file );
+      cp = new Rook( BLACK, "BR", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
+    else if( rank == 8 && (file == 2 || file == 7) ){
+      SquareID currentLoc ( rank, file );
+      cp = new Knight( BLACK, "BH", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
+    else if( rank == 8 && (file == 3 || file == 6) ){
+      SquareID currentLoc ( rank, file );
+      cp = new Bishop( BLACK, "BB", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
+    else if( rank == 8 && (file == 4 ) ){
+      SquareID currentLoc ( rank, file );
+      cp = new King( BLACK, "BK", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
+    else if( rank == 8 && (file == 5 ) ){
+      SquareID currentLoc ( rank, file );
+      cp = new Queen( BLACK, "BQ", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
   if( rank == 7 && ( file >=1 && file <= 8 ) ){
     SquareID currentLoc ( rank, file );
     cp = new Pawn( BLACK, "BP", currentLoc );
@@ -131,6 +131,7 @@ bool ChessBoard::submitMove( const string source, const string dest )
 
   ChessPiece *movingPiece;          // will be assigned to the piece as source
   movingPiece = chessboard.find( sourceSq )->second;
+  cout << movingPiece->charpiece << endl;
   valid =  movingPiece->tryMove( destSq, getBoard() );   // try to move piece to destination square
 
   if ( valid )

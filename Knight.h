@@ -8,5 +8,8 @@
 class Knight: public ChessPiece{
 public:
   Knight( colour_t _col, std::string _cp, SquareID _loc );
+  
+  
+  bool tryMove( SquareID destSq, const Board &chessboard );
 };
 #endif

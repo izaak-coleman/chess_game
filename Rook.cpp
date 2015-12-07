@@ -11,3 +11,9 @@ using namespace std;
 Rook::Rook( colour_t _col, string _cp, SquareID _loc )
           : ChessPiece( _col, _cp, _loc )
 {}
+
+bool Rook::tryMove( SquareID destSq, const Board &chessboard )
+{
+  /* constrain */
+  return false;
+}
