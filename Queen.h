@@ -3,10 +3,12 @@
 
 # include <string> /* std::string */
 
+# include "Types.h"
 # include "ChessPiece.h"
 
 class Queen: public ChessPiece{
 public:
-  Queen( colour_t _col, std::string _charPiece );
+  Queen( colour_t _col, std::string _cp, SquareID _loc );
 };
+
 #endif 

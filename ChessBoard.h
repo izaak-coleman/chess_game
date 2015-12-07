@@ -7,17 +7,14 @@
 # include <utility>   /* std::pair */
 # include <string>    /* std::string */
 
-
+# include "Types.h"
 # include "ChessPiece.h"
 
 static const int MAX_RANK = 8;
 static const int MAX_FILE = 8;
 
 class ChessBoard{
-/* Describe ChessBoard in here */
-public:
-  typedef std::pair< int, int > SquareID;
-  typedef std::map< SquareID, ChessPiece* > Board;
+/* Describe ChessBoard in here */ public:
 
   ChessBoard();
   /* Calls loadStartPositions, sets move to WHITE */
@@ -60,13 +57,16 @@ private:
   void print_row( const Board &cb, int rank );
   /* Prints the chessboard to the screen. */
   /* Sets up board with mapped chess pieces */
+
   void print_frame();
 
-  void invalidSourceSq( const SquareID &sourceSq );
+
+  
+  void invalidSourceSq( const SquareID &sourceSq );   // Helper SubmitMove
   /* Throws error if the colour_t of the chessPiece at square sourceSq
    * matches does not match turn. */
 
-  void invalidDestSq( const SquareID &destSq );
+  void invalidDestSq( const SquareID &destSq );       // Helper SubmitMove
   /* Throws error if a chess piece is located at destSq, and this chess piece
    * is of the same colour_t as turn*/
 

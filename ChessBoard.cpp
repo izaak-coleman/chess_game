@@ -2,6 +2,7 @@
 # include <utility> /* std::pair */
 # include <string>  /* std::string */
 
+# include "Types.h" 
 # include "ChessBoard.h"
 # include "ChessPiece.h"
 
@@ -37,7 +38,7 @@ void ChessBoard::loadStartPositions()
 
 }
 
-pair< ChessBoard::SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
+pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
 {
   /* Get rank and file allocated to square. */
   int rank = square.first;
@@ -47,27 +48,33 @@ pair< ChessBoard::SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID sq
   
   /* Allocate Pieces for 'White Side' of the chessboard; ranks 1-2 */
   if( rank == 1 && (file == 1 || file == 8) ){
-    cp = new Rook( WHITE, "WR" );
+    SquareID currentLoc ( rank, file );
+    cp = new Rook( WHITE, "WR", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 2 || file == 7) ){
-    cp = new Knight( WHITE, "WH" );
+    SquareID currentLoc ( rank, file );
+    cp = new Knight( WHITE, "WH", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 3 || file == 6) ){
-    cp = new Bishop( WHITE, "WB" );
+    SquareID currentLoc ( rank, file );
+    cp = new Bishop( WHITE, "WB", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 4 ) ){
-    cp = new King( WHITE, "WK");
+    SquareID currentLoc ( rank, file );
+    cp = new King( WHITE, "WK", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 1 && (file == 5 ) ) {
-    cp = new Queen( WHITE, "WQ" );
+    SquareID currentLoc ( rank, file );
+    cp = new Queen( WHITE, "WQ", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 2 && ( file >= 1 && file <= 8 ) ){
-    cp = new Pawn( WHITE, "WP" );
+    SquareID currentLoc ( rank, file );
+    cp = new Pawn( WHITE, "WP", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
 
@@ -81,27 +88,33 @@ pair< ChessBoard::SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID sq
 
   /* Allocate ChessPeices for 'Black Side' of chessboard; ranks 7-8. */
   if( rank == 8 && (file == 1 || file == 8) ){
-    cp = new Rook( BLACK, "BR");
+    SquareID currentLoc ( rank, file );
+    cp = new Rook( BLACK, "BR", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 2 || file == 7) ){
-    cp = new Knight( BLACK, "BH" );
+    SquareID currentLoc ( rank, file );
+    cp = new Knight( BLACK, "BH", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 3 || file == 6) ){
-    cp = new Bishop( BLACK, "BB" );
+    SquareID currentLoc ( rank, file );
+    cp = new Bishop( BLACK, "BB", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 4 ) ){
-    cp = new King( BLACK, "BK" );
+    SquareID currentLoc ( rank, file );
+    cp = new King( BLACK, "BK", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 8 && (file == 5 ) ){
-    cp = new Queen( BLACK, "BQ" );
+    SquareID currentLoc ( rank, file );
+    cp = new Queen( BLACK, "BQ", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else if( rank == 7 && ( file >=1 && file <= 8 ) ){
-    cp = new Pawn( BLACK, "BP" );
+    SquareID currentLoc ( rank, file );
+    cp = new Pawn( BLACK, "BP", currentLoc );
     return pair< SquareID, ChessPiece* > ( square, cp );
   }
   else{ /* Throw error*/}
@@ -117,7 +130,7 @@ bool ChessBoard::submitMove( const string source, const string dest )
 
   ChessPiece *movingPiece;          // will be assigned to the piece as source
   movingPiece = chessboard.find( sourceSq )->second;
-  movingPiece->tryMove( destSq );   // try to move piece to destination square
+  movingPiece->tryMove( destSq, getBoard() );   // try to move piece to destination square
 
   
 
@@ -164,7 +177,7 @@ void ChessBoard::invalidDestSq( const SquareID &destSq )
 }
 
 
-ChessBoard::Board ChessBoard::getBoard()
+Board ChessBoard::getBoard()
 {
   return chessboard;
 }
