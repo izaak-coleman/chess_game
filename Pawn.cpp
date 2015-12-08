@@ -16,31 +16,54 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
 {
   int destRank, destFile;
   destRank = destSq.first; destFile = destSq.second;
+  cout << "We entered trymove " << endl;
+  cout  << "destSq at start of trymove "<< destSq.first << " " << destSq.second << endl;
 
-  cout << "Reached in here. currentLoc is " << currentLoc.first << " "
-       << currentLoc.second << endl;
+  
+  /* If WHITE Pawn and destination is empty */
+  if( colour == WHITE && chessboard.find( destSq )->second == NULL ){ 
 
-  if( colour == WHITE && currentLoc.first == 2 ){ // WHITE Pawn at start
-    if( destRank == 3 || destRank == 4 ){         // can move two places
-    cout << "White pawn returned true " << endl;
-      return true;                                // return move valid
+    /* If Pawn is at start position*/
+    cout << "White piece, and empty space being recognised" << endl;
+    if( currentLoc.first == 2 && destRank == 4 && destFile == destSq.second ){
+
+        string dir = movingDir( destSq );     // get direction
+        cout << "dir: " << dir << endl;
+        if ( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
+          cout << "isNotBlocked working " << endl;
+          return true;
+        }
+      }
+
+    /* Otherwise, can only move one square forward*/
+    else if( ( destSq.first == currentLoc.first+1 ) &&
+             ( destFile == currentLoc.second ) ){
+      return true;
     }
   }
 
-  else if( colour == BLACK && currentLoc.first == 7 ){//BLACK Pawn at start
-    if( destRank == 6 || destRank == 5 ){             // can move two sq's 
-      return true;                                    // return move valid
+
+  /* If BLACK Pawn and dest is empty */
+  if( colour == BLACK && chessboard.find( destSq )->second == NULL ){
+
+    /* If Pawn is at start position, moving two spaces backward is valid */
+    if( currentLoc.first == 7 && destRank == 5 && destFile == destSq.second ){
+
+      string dir = movingDir( destSq );     // get direction
+      if ( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
+        return true;
+      }
+    }
+
+    /* Otherwise, can only move one place backward*/
+    else if( ( destSq.first == currentLoc.first-1 ) &&
+             ( destFile == currentLoc.second ) ) {
+      return true;
     }
   } 
-  
-  else if( destRank == ( currentLoc.first+1 ) &&     // if anywere but start
-           chessboard[ destSq ].second == NULL ){    // move forward if empty
-      return true;   
-  }
 
-  else if( destRank == ( currentLoc.first+1 ) &&     // if diagonaly forward
-         ( destFile == currentLoc.second-1 ||        // and 
-           destFile == currentLoc.decont+1 ){        
+  /* Valid diag move if moved only one space and contains oposite colour */ 
+  if( chessboard.find( destSq )->second != NULL && diagMov( destSq ) ){
       return true;
   }
 
@@ -48,5 +71,28 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
   return false;                                   // no other legal move
 }
 
+bool Pawn::diagMov( SquareID destSq )
+{
+  /* If WHITE, can only move diagonaly forward one space*/
+  if( colour == WHITE ){
+
+    if( destSq.first == currentLoc.first+1 &&
+        ( destSq.second == currentLoc.second-1 ||
+          destSq.second == currentLoc.second+1 ) ){
+      return true;
+    }
+  }
+
+  /* if BLACK, can only move diagonaly backward one space*/
+  else if( colour == BLACK ){
+
+    if( destSq.first == currentLoc.first-1 && 
+        ( destSq.second == currentLoc.second-1 ||
+          destSq.second == currentLoc.second+1 ) ){
+      return true;
+    }
+  }
+  return false;       // invalid diagonal move
+}
+
 Pawn::~Pawn(){}
-/* Destructor for Pawn*/

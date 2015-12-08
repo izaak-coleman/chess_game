@@ -138,6 +138,7 @@ bool ChessBoard::submitMove( const string source, const string dest )
   {
     movePiece( movingPiece, destSq );
   }
+  else{ cout << "Not Valid Move" << endl; }
 
   return true;
 

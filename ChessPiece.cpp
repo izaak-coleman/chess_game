@@ -1,4 +1,6 @@
 // ChessPiece.cpp
+
+# include <iostream>
 # include <string> /* std::string */
 # include <map>
 # include <utility>
@@ -28,111 +30,110 @@ void ChessPiece::setCurrentLoc( SquareID destSq )
   currentLoc = destSq;
 }
 
-bool isNotBlocked( const SquareID destSq, SquareID nextSq,
+bool ChessPiece::isNotBlocked( const SquareID destSq, SquareID nextSq,
                    const Board &chessboard, string dir )
 {
   /* Get ranks and files */
   int nextRank, nextFile, destRank, destFile;
   nextRank = nextSq.first;  nextFile = nextSq.second;
   destRank = destSq.first;  destFile = destSq.second;
+  cout << "The value of nextSq: " << nextSq.first << " " << nextSq.second << endl;
 
-  /* If made to nextSq has reached destSq without blocking, return true */
+  /* Switch to stop recursive function checking the start location */
+  bool start = false;
+  if( nextSq == currentLoc ){
+      cout << "Start switched on:" << endl;
+      start = true;
+  }
+
+  /* If reached destSq without blocking, return true */
+  cout << "Valuue of DestSq in isnb: " << destSq.first << destSq.second << endl;
   if( nextSq == destSq ){
+    cout << "NextSq == destSq comp not working " << endl;
     return true;
   }
 
-  /* Otherwise, keep on checking! */
+  /* Return false if square we are checking contains a piece*/
+  if( chessboard.find( nextSq )->second != NULL && start != true ) {
+    return false;
+  }
+
+
+  /* Otherwise move to next square and recursively check! */
 
   /* ChessPiece piece is moving forwards */
   if( dir == "Forward" ){
-    nextSq.first = ( nextRank+1 );            // move forward one rank
-    if( chessboard[ nextSq ].second != NULL ) // if path is blocked
-    {
-      return false;                           // do not progress, return blocked
-    }
-    else{                                     // path empty so far, check next sq
-      isNotBlocked( destSq, nextSq, chessboard, dir ); // Check next square
+    nextSq.first = ( nextRank+1 );          // move forward one rank
+    cout << " Entered forward condition " << endl;
+    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){ // Check next square
+      return true;
     }
   }
+
   /* ChessPiece piece is moving backwards */
-  if else( dir == "Backward" ){
+  else if( dir == "Backward" ){
     nextSq.first = ( nextRank-1 );
-    if( chessboard[ nextSq ].second != NULL )
-    {
-      return false;
-    }
-    else{
-      isNotBlocked( destSq, nextSq, chessboard, dir );
+    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
+      return true;
     }
   }
+
   /* ChessPiece piece has been moved to the right */
-  if( dir == "Right" ){
+  else if( dir == "Right" ){
     nextSq.second = ( nextFile+1 );
-    if( chessboard[ nextSq ].second != NULL )
-    {
-      return false;
-    }
-    else{
-      isNotBlocked( destSq, nextSq, chessboard, dir );
+    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
+      return true;
     }
   }
+
   /* ChessPiece piece has been moved to the left */
-  if( dir == "Left" ){
+  else if( dir == "Left" ){
     nextSq.second = ( nextFile-1 );
-    if( chessboard[ nextSq ].second != NULL )
-    {
-      return false;
-    }
-    else{
-      isNotBlocked( destSq, nextSq, chessboard, dir );
+    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
+      return true;
     }
   }
+
   /* ChessPiece piece has been moved up and to right */
-  if( dir == "UpRight" ){
-    nextSq.first =  ( nextRank+1 );           // move one rank and one file fwd
+  else if( dir == "UpRight" ){
+    nextSq.first =  ( nextRank+1 );        // move one rank and one file fwd
     nextSq.second = ( nextFile+1 );
-    if( chessboard[ nextSq ].second != NULL ) // if path is blocked
-    {
-      return false;                           // do not progress, return blocked
-    }
-    else{                                     // path empty so far, check next sq
-      isNotBlocked( destSq, nextSq, chessboard, dir );
+    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
+      return true;
     }
   }
+
   /* ChessPiece piece has been moved down and to right */
-  if( dir == "DownRight" ){
-    nextSq.first =  ( nextRank-1 );           // move one rank back
-    nextSq.second = ( nextFile+1 );           // move one file to right
-    if( chessboard[ nextSq ].second != NULL ) // if path is blocked
-    {
-      return false;                           // do not progress, return blocked
-    }
-    else{                                     // path empty so far, check next sq
-      isNotBlocked( destSq, nextSq, chessboard, dir ); // Check next square
+  else if( dir == "DownRight" ){
+    nextSq.first =  ( nextRank-1 );           
+    nextSq.second = ( nextFile+1 );           
+    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
+      return true;
     }
   }
+
+  /* ChessPiece piece has been moved up and to left */
+  else if( dir == "UpLeft" ){
+    nextSq.first =  ( nextRank+1 );            
+    nextSq.second = ( nextFile-1 );            
+    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
+      return true;
+    }
+  }
+
   /* ChessPiece piece has been moved forward */
-  if( dir == "Forward" ){
-    nextSq.first = ( nextRank+1 );            // move forward one rank
-    if( chessboard[ nextSq ].second != NULL ) // if path is blocked
-    {
-      return false;                           // do not progress, return blocked
-    }
-    else{                                     // path empty so far, check next sq
-      isNotBlocked( destSq, nextSq, chessboard, dir ); // Check next square
+  else if( dir == "DownLeft" ){
+    nextSq.first =  ( nextRank-1 );            
+    nextSq.second = ( nextRank-1 );            
+    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
+      return true;
     }
   }
-  /* ChessPiece piece has been moved forward */
-  if( dir == "Forward" ){
-    nextSq.first = ( nextRank+1 );            // move forward one rank
-    if( chessboard[ nextSq ].second != NULL ) // if path is blocked
-    {
-      return false;                           // do not progress, return blocked
-    }
-    else{                                     // path empty so far, check next sq
-      isNotBlocked( destSq, nextSq, chessboard, dir ); // Check next square
-    }
+
+  else {// direction error
+    cout << "Direction error, in isNotBlocked " << endl;
   }
+  return false;
 
 }
 
@@ -143,50 +144,42 @@ string ChessPiece::movingDir( SquareID destSq )
   destRank = destSq.first;
   destFile = destSq.second;
 
-  /* Forward: Destination rank higher than current rank, no change in file*/
-  if( (destRank > currentLoc.first) && (destFile == currentLoc.second) ){
-    direction = "Forward";
-  } 
+  if( destRank > currentLoc.first ){       // traveling forwards ...
 
-  /* Backward: Destination rank lower than current rank, no change in file*/
-  else if( (destRank < currentLoc.first) && (destFile == currentLoc.second) ){
-    direction = "Backward";
+    if( destFile == currentLoc.second ){
+      direction = "Forward";
+    } 
+    else if( destFile > currentLoc.second ){
+      direction = "UpRight";              // and to the right
+    }
+    else if( destFile < currentLoc.second ){
+      direction = "UpLeft";               // and to the left
+    }
+  }
+
+  else if( destRank < currentLoc.first ){ // traveling backwards ...
+    
+    if( destFile == currentLoc.second ){
+      direction = "Backward";
+    }
+    else if( destFile > currentLoc.second ){
+      direction = "DownRight";            // and to the right
+    }
+    else if( destFile < currentLoc.second ){
+      direction = "DownLeft";             // and to the left
+    }
   }
   
-  /* Right: Destination file greater thank current file, no change in rank*/
   else if( (destRank == currentLoc.first) && (destFile > currentLoc.second) ){
     direction = "Right";
   }
 
-  /* Left: Destination file lower than current file, no change in rank*/
   else if( (destRank == currentLoc.first) && (destFile < currentLoc.second) ){
     direction = "Left";
   }
-  
-  /* UpRight: Destination file and rank greater than current file and rank*/
-  else if( (destRank > currrentLoc.first) && (destFile > currentLoc.second) ){
-    direction = "UpRight";
-  }
 
-  /* DownRight: Destination file greater than current file, destination rank
-   * less thank current rank */
-  else if( (destRank < currentLoc.first) && (destFile > currentLoc.second) ){
-    direction = "DownRight";
-  }
-  
-  /* UpLeft: Destination file is less than current file, destination rank
-   * greater than current rank*/
-  else if( (destRank > currentLoc.first) && (destFile < currentLoc.second) ){
-    direction = "UpLeft";
-  } 
-  
-  /* DownLeft: Destination file and rank is less than current rank and file*/
-  else if( ( destRank < currentLoc.first) && (destFile < currentLoc.second ) ){
-    direction = "DownLeft";
-  }
-  else{
-    /* Throw error */
-    cout << "Impossible dest" << endl;
+  else{ // tried to move nowhere
+    /* Throw move nowhere error*/
   }
 
   return direction;
