@@ -14,8 +14,9 @@ Pawn::Pawn( colour_t _col, string _cp, SquareID _loc )
 
 bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
 {
-  int destRank;
-  destRank = destSq.first;
+  int destRank, destFile;
+  destRank = destSq.first; destFile = destSq.second;
+
   cout << "Reached in here. currentLoc is " << currentLoc.first << " "
        << currentLoc.second << endl;
 
@@ -32,8 +33,15 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
     }
   } 
   
-  else if( destRank == ( currentLoc.first+1 ) ){  // if anywhere else
-    return true;                                  // move one sq
+  else if( destRank == ( currentLoc.first+1 ) &&     // if anywere but start
+           chessboard[ destSq ].second == NULL ){    // move forward if empty
+      return true;   
+  }
+
+  else if( destRank == ( currentLoc.first+1 ) &&     // if diagonaly forward
+         ( destFile == currentLoc.second-1 ||        // and 
+           destFile == currentLoc.decont+1 ){        
+      return true;
   }
 
   // else
