@@ -32,6 +32,19 @@ public:
    * of the chesspiece. Movement is constrained to derived type. Returns
    * true if destSq in range. */
 
+  bool isNotBlocked( const SquareID destSq, SquareID nextSq, 
+                  const Board &chessboard, std::string dir );
+  /* Recursive function that checks if the path for the ChessPiece from 
+   * currentLoc to destSq is not blocked by another ChessPiece. 
+   * The blocking ChessPiece could be of either colour. The function will not
+   * return blocked if there is a piece of the opposite colour at destSq */
+  
+  std::string movingDir( SquareID destSq );   // isNotBlocked helper function
+  /* Determine direction ChessPiece is moving and outputs a string encoding
+   * direction */
+
+
+
   virtual ~ChessPiece();
   /* Virtual destructor to destroy derived classes */
 
