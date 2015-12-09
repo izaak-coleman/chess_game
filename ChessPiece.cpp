@@ -33,10 +33,9 @@ void ChessPiece::setCurrentLoc( SquareID destSq )
 bool ChessPiece::isNotBlocked( const SquareID destSq, SquareID nextSq,
                    const Board &chessboard, string dir )
 {
-  /* Get ranks and files */
-  int nextRank, nextFile, destRank, destFile;
+
+  int nextRank, nextFile;
   nextRank = nextSq.first;  nextFile = nextSq.second;
-  destRank = destSq.first;  destFile = destSq.second;
   cout << "The value of nextSq: " << nextSq.first << " " << nextSq.second << endl;
 
   /* Switch to stop recursive function checking the start location */

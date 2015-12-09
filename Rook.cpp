@@ -16,32 +16,26 @@ Rook::Rook( colour_t _col, string _cp, SquareID _loc )
 
 bool Rook::tryMove( SquareID destSq, const Board &chessboard )
 {
-  cout << "Made it into the rook trymove " << endl;
   int destRank, destFile;
   destRank = destSq.first;  destFile = destSq.second;  
-  string dir = movingDir( destSq );       // get direction of movement
+  string dir = movingDir( destSq );     // find direction to dest
 
 
-  /* Rook can move directly forward or backward */
-  if( currentLoc.second == destFile ){    // rank can be anywhere in range
-  cout << "We made it to the forward move constraint " << endl;
-    /* If path to destSq not blocked, return valid move*/
+  /* Constrain movement to directly forward or backward */
+  if( currentLoc.second == destFile ){            // constant file
     if( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
-      return true;
+      return true;                                // valid move
     }
   }
   
-  /* Rook can move left or right */
-  else if( currentLoc.first == destRank ){ // file can be anywhere in range
-
-    /* If path to destSq not blocked, return valid move*/
+  /* Constrain movement to left or right */
+  else if( currentLoc.first == destRank ){        // constant rank
     if( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
-      return true;
+      return true;                                // valid move
     }
   }
 
-  /* Otherwise, Move is illegal*/
-
+  /* Otherwise, move is illegal*/
   return false;
 }
 

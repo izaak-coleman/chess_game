@@ -20,8 +20,58 @@ int main()
   cout << endl << endl << " Pawn moved " << endl;
   cb.display_board( cb.getBoard() );
 
-  cb.submitMove( "A1", "A8" );
+  cb.submitMove( "D2", "D4" );
+  cout << endl << endl << " Pawn moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "A1", "A3" );
   cout << endl << endl << " Rook moved " << endl;
   cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "A3", "F3" );
+  cout << endl << endl << " Rook moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "B1", "C3" );
+  cout << endl << endl << " Knight moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "C3", "D5" );
+  cout << endl << endl << " Knight moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "D5", "E7" );
+  cout << endl << endl << " Knight moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "E7", "C8" );
+  cout << endl << endl << " Knight moved " << endl;
+  cb.display_board( cb.getBoard() );
+  
+  cb.submitMove( "C8", "C6" );
+  cout << endl << endl << " Knight moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "D1", "D2" );
+  cout << endl << endl << " Knight moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "D2", "D3" );
+  cout << endl << endl << " Knight moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "D3", "E3" );
+  cout << endl << endl << " Knight moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  cb.submitMove( "E3", "F3" );
+  cout << endl << endl << " Knight moved " << endl;
+  cb.display_board( cb.getBoard() );
+
+  
+
+
+  
+
   return 0;
 }

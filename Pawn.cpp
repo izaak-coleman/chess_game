@@ -14,7 +14,6 @@ Pawn::Pawn( colour_t _col, string _cp, SquareID _loc )
 
 bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
 {
-  cout << "Calling Chesstrymove for rook? " << endl;
   int destRank, destFile;
   destRank = destSq.first; destFile = destSq.second;
   string dir = movingDir( destSq );     // get direction

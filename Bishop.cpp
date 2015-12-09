@@ -1,5 +1,7 @@
 # include <iostream>
 # include <string> /* std::string */
+# include <cmath>
+# include <utility>
 
 # include "Bishop.h"
 # include "Types.h"
@@ -13,6 +15,22 @@ Bishop::Bishop( colour_t _col, string _cp, SquareID _loc)
 
 bool Bishop::tryMove( SquareID destSq, const Board &chessboard )
 {
-  /* Constrain */
+  int destRank, destFile;
+  destRank = destSq.first;  destFile = destSq.second;
+  string dir = movingDir( destSq );         // find direction to dest
+
+  /* Get change in rank and file*/
+  int deltaRank, deltaFile;
+  deltaRank = abs( destRank - currentLoc.first );   // get change in rank
+  deltaFile = abs( destFile - currentLoc.second );  // get change in file
+  
+  /* Constrain movement to diagonal only */
+  if( deltaRank == deltaFile ){
+    if( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
+      return true;                  // valid move
+    }
+  }
+  
+  /* Otherwise, move was illegal */
   return false;
 }
