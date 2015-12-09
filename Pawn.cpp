@@ -14,23 +14,19 @@ Pawn::Pawn( colour_t _col, string _cp, SquareID _loc )
 
 bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
 {
+  cout << "Calling Chesstrymove for rook? " << endl;
   int destRank, destFile;
   destRank = destSq.first; destFile = destSq.second;
-  cout << "We entered trymove " << endl;
-  cout  << "destSq at start of trymove "<< destSq.first << " " << destSq.second << endl;
+  string dir = movingDir( destSq );     // get direction
 
   
   /* If WHITE Pawn and destination is empty */
   if( colour == WHITE && chessboard.find( destSq )->second == NULL ){ 
 
     /* If Pawn is at start position*/
-    cout << "White piece, and empty space being recognised" << endl;
     if( currentLoc.first == 2 && destRank == 4 && destFile == destSq.second ){
 
-        string dir = movingDir( destSq );     // get direction
-        cout << "dir: " << dir << endl;
         if ( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
-          cout << "isNotBlocked working " << endl;
           return true;
         }
       }
@@ -49,7 +45,6 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
     /* If Pawn is at start position, moving two spaces backward is valid */
     if( currentLoc.first == 7 && destRank == 5 && destFile == destSq.second ){
 
-      string dir = movingDir( destSq );     // get direction
       if ( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
         return true;
       }

@@ -14,17 +14,12 @@ Rook::Rook( colour_t _col, string _cp, SquareID _loc )
           : ChessPiece( _col, _cp, _loc )
 {}
 
-void Rook::coutHello(){
-  cout << "HELLLLLLLLLLLOOOOOO" << endl;
-}
-
-virtual bool Rook::tryMove( SquareID destSq, const Board &chessboard )
+bool Rook::tryMove( SquareID destSq, const Board &chessboard )
 {
   cout << "Made it into the rook trymove " << endl;
   int destRank, destFile;
-  destRank = destSq.first;  destFile = destSq.file;  
+  destRank = destSq.first;  destFile = destSq.second;  
   string dir = movingDir( destSq );       // get direction of movement
-
 
 
   /* Rook can move directly forward or backward */

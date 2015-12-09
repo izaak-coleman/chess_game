@@ -55,6 +55,7 @@ bool ChessPiece::isNotBlocked( const SquareID destSq, SquareID nextSq,
 
   /* Return false if square we are checking contains a piece*/
   if( chessboard.find( nextSq )->second != NULL && start != true ) {
+    cout << " BLOCKEDDD!! " << endl;
     return false;
   }
 

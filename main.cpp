@@ -4,6 +4,7 @@
 
 # include "ChessBoard.h"
 # include "ChessPiece.h"
+# include "Rook.h"
 
 using namespace std;
 
@@ -15,15 +16,12 @@ int main()
 
   cout << endl << endl << "Next turn: " << cb.getTurn() << endl;
 
-  cb.submitMove( "D2", "D4" );
-  cb.display_board( cb.getBoard() );
-  cb.submitMove( "D4", "D5" );
-  cb.display_board( cb.getBoard() );
-  cb.submitMove( "D5", "D6" );
-  cb.display_board( cb.getBoard() );
-  cb.submitMove( "D6", "C7" );
+  cb.submitMove( "A2", "A4" );
+  cout << endl << endl << " Pawn moved " << endl;
   cb.display_board( cb.getBoard() );
 
-
+  cb.submitMove( "A1", "A8" );
+  cout << endl << endl << " Rook moved " << endl;
+  cb.display_board( cb.getBoard() );
   return 0;
 }
