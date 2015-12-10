@@ -136,6 +136,29 @@ bool ChessPiece::isNotBlocked( const SquareID destSq, SquareID nextSq,
   return false;
 
 }
+bool ChessPiece::canBeAttacked( const Board &cb, const colour_t colour ){
+  
+  SquareID squareToCheck;
+  ChessPiece *chPiece;
+
+  /* Check if Pawns can attack */
+  if( colour == WHITE ){
+    squareToCheck.first = curentLoc.first+1;
+  
+    /* Check left side*/
+    squareToCheck.second = currentLoc.second-1;
+    chPiece = cb.find( squareToCheck )->second;
+    if( piece != NULL && piece->charpeice = "BP" ){
+      return true;
+    }
+
+    /*Check right side*/
+    squareToCheck.second = currentLoc.second+1;
+
+    
+    
+  }
+}
 
 string ChessPiece::movingDir( SquareID destSq )
 {
