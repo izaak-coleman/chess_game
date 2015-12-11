@@ -16,7 +16,7 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
 {
   int destRank, destFile;
   destRank = destSq.first; destFile = destSq.second;
-  string dir = movingDir( destSq );     // get direction
+  SquareID dir = movingDir( destSq );     // get direction
 
   
   /* If WHITE Pawn and destination is empty */
@@ -25,7 +25,7 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
     /* If Pawn is at start position*/
     if( currentLoc.first == 2 && destRank == 4 && destFile == destSq.second ){
 
-        if ( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
+        if ( isNotBlocked( destSq, currentLoc, dir, chessboard) ){
           return true;
         }
       }
@@ -44,7 +44,7 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
     /* If Pawn is at start position, moving two spaces backward is valid */
     if( currentLoc.first == 7 && destRank == 5 && destFile == destSq.second ){
 
-      if ( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
+      if ( isNotBlocked( destSq, currentLoc, dir, chessboard) ){
         return true;
       }
     }

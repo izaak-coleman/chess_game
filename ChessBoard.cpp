@@ -32,6 +32,7 @@ void ChessBoard::loadStartPositions()
       validInsert = chessboard.insert( allocatePiece( square ) );
 
       if( validInsert.second == false ){          // check validty, handle fail
+       /* handler for fail */ 
       }
     }
   }
@@ -65,6 +66,7 @@ pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
     else if( rank == 1 && (file == 4 ) ){
       SquareID currentLoc ( rank, file );
       cp = new King( WHITE, "WK", currentLoc );
+      whiteKing = currentLoc;                   // Keep track of white king
       return pair< SquareID, ChessPiece* > ( square, cp );
     }
     else if( rank == 1 && (file == 5 ) ) {
@@ -105,6 +107,7 @@ pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
     else if( rank == 8 && (file == 4 ) ){
       SquareID currentLoc ( rank, file );
       cp = new King( BLACK, "BK", currentLoc );
+      blackKing = currentLoc;                   // keep track of black king
       return pair< SquareID, ChessPiece* > ( square, cp );
     }
     else if( rank == 8 && (file == 5 ) ){
@@ -122,23 +125,43 @@ pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
 
 bool ChessBoard::submitMove( const string source, const string dest )
 {
-  bool valid;
+  bool validMove;
   SquareID sourceSq ( (source.at(1)-48), (source.at(0)-64) );  // get source ID
   SquareID destSq   ( (dest.at(1)-48), (dest.at(0)-64) );      // get dest ID
 
-  invalidSourceSq( sourceSq );            // check turn owns piece to be moved
-  invalidDestSq( destSq );         // check turn's does not have peice at dest
+  /* Returns false, if the players move is incorrect. Does not 
+   * take into account the validity of the move according to the 
+   * specific chesspiece */
+  if( invalidSourceSq( sourceSq, chessboard ) || invalidDestSq( destSq, chessboard ) ) {
+      cout << "Not a valid move" << endl;
+     return false;
+  }
+
+  /* Otherwise, move piece if the move submitted is valid within the 
+   * chesspiece constraints */
 
   ChessPiece *movingPiece;          // will be assigned to the piece as source
   movingPiece = chessboard.find( sourceSq )->second;
   cout << movingPiece->charpiece << endl;
-  valid =  movingPiece->tryMove( destSq, getBoard() );   // try to move piece to destination square
+  validMove =  movingPiece->tryMove( destSq, getBoard() );   // try to move piece to destination square
 
-  if ( valid )
+  if ( validMove )
   {
     movePiece( movingPiece, destSq );
+    
+    /* Keep track of kings movements */
+    if( sourceSq == whiteKing ){
+      whiteKing = destSq;
+    }
+    else if( sourceSq == blackKing ){
+      blackKing = destSq;
+    }
+  
   }
-  else{ cout << "Not Valid Move" << endl; }
+  else{ 
+    cout << "Not Valid Move" << endl;
+    return false;
+  }
   
   // turn =  ( ( turn == WHITE ) ? BLACK : WHITE );
 
@@ -167,44 +190,215 @@ void ChessBoard::movePiece( ChessPiece* movingPiece, SquareID destSq )
 
 }
 
-void ChessBoard::invalidSourceSq( const SquareID &sourceSq )
+bool ChessBoard::invalidSourceSq( const SquareID sourceSq, const Board &cb )
 {
-  ChessPiece *piece;
-  piece = chessboard.find( sourceSq )-> second; // return pointer to ChessPiece
 
-  /* Need some range checking*/
-
-  if( piece != NULL && piece->getColour() != turn )
-  {
-    cerr << (( turn == WHITE ) ? "White" : "Black") << " cannot move"
-         << " chess piece at "<< static_cast<char> (sourceSq.second+64)
-         << static_cast<char> (sourceSq.first+48) << "." << endl
-         << "This piece is owned by the opposite player." << endl;
+  if( outOfRange( sourceSq ) || 
+      emptySquare( sourceSq, chessboard ) ||
+      !ownsPiece( sourceSq, chessboard ) ){
+    return true;
   }
-  else if( piece == NULL )
-  {
-    cerr << "Invalid move from " << (( turn == WHITE ) ? "White." : "Black." )
-         << endl << "No chess piece located at "
-         << static_cast<char> (sourceSq.second+64)
-         << static_cast<char> (sourceSq.first+48) << "." << endl;
+  // else
+    return false;
+}
+
+bool ChessBoard::invalidDestSq( const SquareID destSq, const Board &cb )
+{
+  if( outOfRange( destSq ) ){
+    return true;
+  }
+
+  if( !emptySquare( destSq, cb ) && ownsPiece( destSq, cb ) ){
+      return true;
+  }
+
+  // else
+    return false;
+}
+
+bool ChessBoard::sqIsReachable( const SquareID sqToCheck, const bool attackSwitch,
+                                const Board &cb )
+{
+  SquareID nextSq;
+  bool reachable = false;
+
+  /* Return true if a chesspiece can reach sqToCheck */
+  for( int rank=1; rank <= 8; rank++ ){
+    for( int file=1; file <= 8; file++ ){
+      nextSq.first = rank;
+      nextSq.second = file; 
+  
+      ChessPiece *movingPiece;
+      movingPiece= cb.find( nextSq )->second;
+
+      switch( attackSwitch ){
+        case 0:{ // ATTACK
+ 
+          /* If the attacking piece is the same colour as the king, check nextSq */
+          if( movingPiece = NULL || movingPiece->colour == colour ){
+            continue;
+          }
+          else{
+            if( movingPiece->tryMove( kingSq, cb ) ){  // check enemy attack
+              reachable = true;   // piece is attackable
+              attackingLocations.push_back( sqToCheck );
+            }
+          }
+        }
+        
+        case 1:{ // BLOCK
+         /* If the blocking piece is not the same colour as the king
+          * check nextSq*/ 
+          if( movingPiece = NULL || movingPiece->colour != colour ){
+            continue;
+          }
+          else{
+            if( movingPiece->tryMove( kingSq, cb ) ){ // if blockable, return
+              reachable = true;
+              return reachable;
+            }
+          }
+
+          return reachable;
+        }
+      }
+    }
+
   }
 }
 
-void ChessBoard::invalidDestSq( const SquareID &destSq )
+bool ChessBoard::canBlock( const SquareID sqToCheck, const Board &cb )
 {
-  ChessPiece *piece;
-  piece = chessboard.find( destSq )-> second;  // return pointer to ChessPiece
+ 
+  do {
 
-  /* Need some range checking */
+    sqToCheck.first += dir.first;
+    sqToCheck.second += dir.second;
 
-  if( piece != NULL && piece->getColour() == turn ){
-    cerr << "Invalid move from " << (( turn == WHITE ) ? "White." : "Black." )
-         << endl << "Cannot take your own chess piece located at "
-         << static_cast<char> (destSq.second+64)
-         << static_cast<char> (destSq.first+48) << "." << endl;
+    if( squareIsReachable( blockingSq, BLOCK, cb ){
+      return true;      
+    }
+
+  }while( sqToCheck != attackSq )
+}
+
+bool ChessBoard::CheckMate( const SquareID kingSq, const Board &cb )
+{
+  bool checkmate = true;
+  SquareID firstAttacker = attackingLocations[0];
+ 
+  if( attackingLocations.size > 1 ){ // double check. Only esc is king move 
+  }
+  else if( attackingLocations.size == 1 ){
+    if( sqIsReachable( firstAttacker, ATTACK, cb ) ){
+      checkmate = false;
+    }
+  }
+  else{
+        SquareID dir = movingDir( firstAttacker, kingSq );
+        SquareID blockSq = kingSq;
+
+      do{
+        blockSq.first += dir.first;
+        blockSq.second += dir.second;
+        if( sqIsReachable( blockSq, BLOCK, cb ) ){
+          checkmate = false;
+        }
+      }while( blockSq != firstAttacker )
+  }
+    
+  return checkmate;
+
+
+}
+
+SquareID ChessBoard::movingDir( const SquareID attackerSq, const SquareID kingSq )
+{
+  int attRank, attFile, kingRank, kingFile;
+
+  attRank = attackerSq.first; attFile = attackerSq.second;
+  kingRank = kingSq.first;  kingRank = kingSq.second;
+
+  if( attRank > kingRank ){     // attacking from front 
+
+    if( attFile == kingFile ){
+      SquareID direction ( 1, 0 );
+      return direction;
+    
+    } 
+    else if( attFile > kingFile ){
+      SquareID direction ( 1, 1 );                  // and to the right
+      return direction;
+    }
+    else if( attFile < kingFile ){
+      SquareID direction ( 1, -1 );                 // and to the left
+      return direction;
+    }
+  }
+
+  else if( attRank < kingRank ){ // attacking from behind
+    
+    if( attFile == kingFile ){
+      SquareID direction ( -1, 0 ); 
+      return direction;
+    }
+    else if( attFile > kingFile ){
+      SquareID direction ( -1, 1 );            // and to the right
+      return direction;
+    }
+    else if( attFile < kingFile ){
+      SquareID direction ( -1, -1 );             // and to the left
+      return direction;
+    }
+  }
+  
+  /* Attacking from right */
+  else if( (attRank == kingRank) && (attFile > kingFile) ){
+    SquareID direction ( 0, 1 );
+    return direction;
+  }
+
+  /* Attacking from left */
+  else if( (attRank == kingRank) && (attFile < kingFile) ){
+    SquareID direction ( 0, -1 );
+    return direction;
   }
 }
 
+
+bool ChessBoard::ownsPiece( const SquareID sq, const Board &cb )
+{
+  ChessPiece *piece;
+  piece = chessboard.find( sq )->second;
+  if( piece->getColour() == turn ){ 
+    return true;
+  }
+  // else
+    return false;
+}
+
+bool ChessBoard::emptySquare( const SquareID sq, const Board &cb )
+{
+  ChessPiece *piece;
+  piece = chessboard.find( sq )->second;
+  if( piece == NULL ){
+     return true;
+  }
+  // else
+    return false;
+}
+
+bool ChessBoard::outOfRange( const SquareID sq )
+{
+  /* return false if rank and file is between 1-8*/
+  if( ( sq.first > 0 && sq.first < 9 ) &&
+      ( sq.second > 0 && sq.second < 9 ) ){
+      return false;
+  }
+
+  // else  out of range, return true
+  return true;
+}
 
 Board ChessBoard::getBoard()
 {
@@ -215,8 +409,6 @@ colour_t ChessBoard::getTurn()
 {
   return turn;
 }
-
-
 
 /* internal helper function */
 void ChessBoard::print_frame() {

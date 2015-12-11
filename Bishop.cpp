@@ -17,7 +17,7 @@ bool Bishop::tryMove( SquareID destSq, const Board &chessboard )
 {
   int destRank, destFile;
   destRank = destSq.first;  destFile = destSq.second;
-  string dir = movingDir( destSq );         // find direction to dest
+  SquareID dir = movingDir( destSq );         // find direction to dest
 
   /* Get change in rank and file*/
   int deltaRank, deltaFile;
@@ -26,7 +26,7 @@ bool Bishop::tryMove( SquareID destSq, const Board &chessboard )
   
   /* Constrain movement to diagonal only */
   if( deltaRank == deltaFile ){
-    if( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
+    if( isNotBlocked( destSq, currentLoc, dir, chessboard ) ){
       return true;                  // valid move
     }
   }

@@ -18,9 +18,5 @@ public:
 
   bool tryMove( SquareID destSq, const Board &chessboard );
 
-  int inCheck( const Board &chessboard );
-  /* Checks if the king is in check, checkmate or stalemate
-   * Returns an int for each condition *.
-
 };
 #endif

@@ -13,24 +13,24 @@ protected:
 
   /* Member functions */
 
-  virtual bool tryMove( SquareID destSq, const Board &chessboard ) = 0;
-  /* Checks if destSq is reachable from the current position, currentLoc,
-   * of the chesspiece. Movement is constrained to derived type. Returns
-   * true if destSq in range. */
 
   bool isNotBlocked( const SquareID destSq, SquareID nextSq, 
-                  const Board &chessboard, std::string dir );
+                     const SquareID direction, const Board &chessboard );
   /* Recursive function that checks if the path for the ChessPiece from 
    * currentLoc to destSq is not blocked by another ChessPiece. 
-   * The blocking ChessPiece could be of either colour. The function will not
-   * return blocked if there is a piece of the opposite colour at destSq */
+   * The blocking ChessPiece could be of either colour. */
   
-  std::string movingDir( SquareID destSq );   // isNotBlocked helper function
+  SquareID movingDir( SquareID destSq );   // isNotBlocked helper function
   /* Determine direction ChessPiece is moving and outputs a string encoding
    * direction */
 
 
 public:
+  virtual bool tryMove( SquareID destSq, const Board &chessboard ) = 0;
+  /* Checks if destSq is reachable from the current position, currentLoc,
+   * of the chesspiece. Movement is constrained to derived type. Returns
+   * true if destSq in range. */
+
   std::string charpiece;               // string code for visualizer
 
   ChessPiece( colour_t _col, std::string _cp, SquareID _loc );

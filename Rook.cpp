@@ -18,19 +18,19 @@ bool Rook::tryMove( SquareID destSq, const Board &chessboard )
 {
   int destRank, destFile;
   destRank = destSq.first;  destFile = destSq.second;  
-  string dir = movingDir( destSq );     // find direction to dest
+  SquareID dir = movingDir( destSq );     // find direction to dest
 
 
   /* Constrain movement to directly forward or backward */
   if( currentLoc.second == destFile ){            // constant file
-    if( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
+    if( isNotBlocked( destSq, currentLoc, dir, chessboard ) ){
       return true;                                // valid move
     }
   }
   
   /* Constrain movement to left or right */
   else if( currentLoc.first == destRank ){        // constant rank
-    if( isNotBlocked( destSq, currentLoc, chessboard, dir ) ){
+    if( isNotBlocked( destSq, currentLoc, dir, chessboard ) ){
       return true;                                // valid move
     }
   }

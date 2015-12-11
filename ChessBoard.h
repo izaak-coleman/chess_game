@@ -6,6 +6,7 @@
 # include <map>       /* std::map */
 # include <utility>   /* std::pair */
 # include <string>    /* std::string */
+# include <vector>
 
 # include "Types.h"
 # include "ChessPiece.h"
@@ -35,14 +36,20 @@ class ChessBoard{
   colour_t getTurn();
   /* Returns who needs to make the next move. */
 
+
 private:
+  static const bool ATTACK = 0;
+  static const bool BLOCK  = 1;
 
   /* Attributes */
   colour_t turn;          // Switches after each successful turn
   Board chessboard;       // Chessboard maps squares to chesspieces
   SquareID sourceSq;      // Current location of the next piece to be moved
   SquareID destSq;        // Destination of the next piece to be moved
-   
+  SquareID whiteKing;     // location of white king
+  SquareID blackKing;     // location of black king
+  std::vector< SquareID > attackingLocations; // contains the locations of current king attack
+
   /* Member Functions */
 
   void movePiece( ChessPiece* movingPiece, SquareID destSq );
@@ -69,13 +76,16 @@ private:
 
 
   
-  void invalidSourceSq( const SquareID &sourceSq );   // Helper SubmitMove
-  /* Throws error if the colour_t of the chessPiece at square sourceSq
-   * matches does not match turn. */
+  bool invalidSourceSq( const SquareID sourceSq, const Board &cb );
+  /* Returns false the chessPiece is not owned by the player. */
 
-  void invalidDestSq( const SquareID &destSq );       // Helper SubmitMove
-  /* Throws error if a chess piece is located at destSq, and this chess piece
-   * is of the same colour_t as turn*/
+  bool invalidDestSq( const SquareID destSq, const Board &cb );
+  /* Returns false if the player whos turn it is tries to move 
+   * the ChessPiece to a position that already contains a ChessPiece of 
+   * their colour. Also checks destSq is in range.  */
+
+  bool outOfRange( const SquareID sq );
+  /* Returns true if the rank and file of sq is not between 1-8 */
 
  // /*void updateBoard( ... ); */
  // bool displayGameStatus();

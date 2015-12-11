@@ -9,6 +9,11 @@
 # include "Types.h"
 # include "ChessPiece.h"
 
+static const int UP = 1;
+static const int DOWN = -1;
+static const int RIGHT = 1;
+static const int LEFT = -1;
+
 using namespace std;
 
 ChessPiece::ChessPiece( colour_t _col, string _cp, SquareID _loc )
@@ -30,13 +35,16 @@ void ChessPiece::setCurrentLoc( SquareID destSq )
   currentLoc = destSq;
 }
 
-bool ChessPiece::isNotBlocked( const SquareID destSq, SquareID nextSq,
-                   const Board &chessboard, string dir )
-{
 
-  int nextRank, nextFile;
-  nextRank = nextSq.first;  nextFile = nextSq.second;
-  cout << "The value of nextSq: " << nextSq.first << " " << nextSq.second << endl;
+
+bool ChessPiece::isNotBlocked( const SquareID destSq, SquareID nextSq, 
+                               const SquareID direction, const Board &chessboard )
+{
+  
+  /* If reached destination, return true */
+  if( destSq == nextSq ){
+    return true;
+  }
 
   /* Switch to stop recursive function checking the start location */
   bool start = false;
@@ -45,167 +53,70 @@ bool ChessPiece::isNotBlocked( const SquareID destSq, SquareID nextSq,
       start = true;
   }
 
-  /* If reached destSq without blocking, return true */
-  cout << "Valuue of DestSq in isnb: " << destSq.first << destSq.second << endl;
-  if( nextSq == destSq ){
-    cout << "NextSq == destSq comp not working " << endl;
-    return true;
-  }
-
   /* Return false if square we are checking contains a piece*/
   if( chessboard.find( nextSq )->second != NULL && start != true ) {
     cout << " BLOCKEDDD!! " << endl;
     return false;
   }
-
-
-  /* Otherwise move to next square and recursively check! */
-
-  /* ChessPiece piece is moving forwards */
-  if( dir == "Forward" ){
-    nextSq.first = ( nextRank+1 );          // move forward one rank
-    cout << " Entered forward condition " << endl;
-    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){ // Check next square
-      return true;
-    }
+  
+  /* Iterate to the next square*/ 
+  nextSq.first += direction.first;  nextSq.second += direction.second;
+  if( isNotBlocked( destSq, nextSq, direction, chessboard) ){
+    return true;
   }
 
-  /* ChessPiece piece is moving backwards */
-  else if( dir == "Backward" ){
-    nextSq.first = ( nextRank-1 );
-    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
-      return true;
-    }
-  }
-
-  /* ChessPiece piece has been moved to the right */
-  else if( dir == "Right" ){
-    nextSq.second = ( nextFile+1 );
-    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
-      return true;
-    }
-  }
-
-  /* ChessPiece piece has been moved to the left */
-  else if( dir == "Left" ){
-    nextSq.second = ( nextFile-1 );
-    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
-      return true;
-    }
-  }
-
-  /* ChessPiece piece has been moved up and to right */
-  else if( dir == "UpRight" ){
-    nextSq.first =  ( nextRank+1 );        // move one rank and one file fwd
-    nextSq.second = ( nextFile+1 );
-    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
-      return true;
-    }
-  }
-
-  /* ChessPiece piece has been moved down and to right */
-  else if( dir == "DownRight" ){
-    nextSq.first =  ( nextRank-1 );           
-    nextSq.second = ( nextFile+1 );           
-    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
-      return true;
-    }
-  }
-
-  /* ChessPiece piece has been moved up and to left */
-  else if( dir == "UpLeft" ){
-    nextSq.first =  ( nextRank+1 );            
-    nextSq.second = ( nextFile-1 );            
-    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
-      return true;
-    }
-  }
-
-  /* ChessPiece piece has been moved forward */
-  else if( dir == "DownLeft" ){
-    nextSq.first =  ( nextRank-1 );            
-    nextSq.second = ( nextRank-1 );            
-    if( isNotBlocked( destSq, nextSq, chessboard, dir ) ){
-      return true;
-    }
-  }
-
-  else {// direction error
-    cout << "Direction error, in isNotBlocked " << endl;
-  }
   return false;
-
-}
-bool ChessPiece::canBeAttacked( const Board &cb, const colour_t colour ){
-  
-  SquareID squareToCheck;
-  ChessPiece *chPiece;
-
-  /* Check if Pawns can attack */
-  if( colour == WHITE ){
-    squareToCheck.first = curentLoc.first+1;
-  
-    /* Check left side*/
-    squareToCheck.second = currentLoc.second-1;
-    chPiece = cb.find( squareToCheck )->second;
-    if( piece != NULL && piece->charpeice = "BP" ){
-      return true;
-    }
-
-    /*Check right side*/
-    squareToCheck.second = currentLoc.second+1;
-
-    
-    
-  }
 }
 
-string ChessPiece::movingDir( SquareID destSq )
+SquareID ChessPiece::movingDir( SquareID destSq )
 {
-  string direction;
-  int destRank, destFile;
-  destRank = destSq.first;
-  destFile = destSq.second;
+  int destRank = destSq.first;
+  int destFile = destSq.second;
 
   if( destRank > currentLoc.first ){       // traveling forwards ...
 
     if( destFile == currentLoc.second ){
-      direction = "Forward";
+      SquareID direction ( 1, 0 );
+      return direction;
+    
     } 
     else if( destFile > currentLoc.second ){
-      direction = "UpRight";              // and to the right
+      SquareID direction ( 1, 1 );                  // and to the right
+      return direction;
     }
     else if( destFile < currentLoc.second ){
-      direction = "UpLeft";               // and to the left
+      SquareID direction ( 1, -1 );                 // and to the left
+      return direction;
     }
   }
 
   else if( destRank < currentLoc.first ){ // traveling backwards ...
     
     if( destFile == currentLoc.second ){
-      direction = "Backward";
+      SquareID direction ( -1, 0 ); 
+      return direction;
     }
     else if( destFile > currentLoc.second ){
-      direction = "DownRight";            // and to the right
+      SquareID direction ( -1, 1 );            // and to the right
+      return direction;
     }
     else if( destFile < currentLoc.second ){
-      direction = "DownLeft";             // and to the left
+      SquareID direction ( -1, -1 );             // and to the left
+      return direction;
     }
   }
   
+  /* Moving right */
   else if( (destRank == currentLoc.first) && (destFile > currentLoc.second) ){
-    direction = "Right";
+    SquareID direction ( 0, 1 );
+    return direction;
   }
 
-  else if( (destRank == currentLoc.first) && (destFile < currentLoc.second) ){
-    direction = "Left";
+  /* Moving left */
+  else if( ( destRank == currentLoc.first) && (destFile < currentLoc.second) ){
+    SquareID direction ( 0, -1 );
+    return direction;
   }
-
-  else{ // tried to move nowhere
-    /* Throw move nowhere error*/
-  }
-
-  return direction;
 }
 
 ChessPiece::~ChessPiece(){}

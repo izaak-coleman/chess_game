@@ -31,12 +31,4 @@ bool King::tryMove( SquareID destSq, const Board &chessboard )
   return false;
 }
 
-int King::isSafePosition( const Board &chessboard, SquareID square )
-{
-  /* determine if pawns are attcking */
-  if( colour == WHITE ){
-find:wq
 
-  }
-
-}
