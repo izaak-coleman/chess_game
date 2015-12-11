@@ -36,8 +36,8 @@ void ChessBoard::loadStartPositions()
       }
     }
   }
-
 }
+
 
 pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
 {
@@ -267,34 +267,22 @@ bool ChessBoard::sqIsReachable( const SquareID sqToCheck, const bool attackSwitc
   }
 }
 
-bool ChessBoard::canBlock( const SquareID sqToCheck, const Board &cb )
-{
- 
-  do {
-
-    sqToCheck.first += dir.first;
-    sqToCheck.second += dir.second;
-
-    if( squareIsReachable( blockingSq, BLOCK, cb ){
-      return true;      
-    }
-
-  }while( sqToCheck != attackSq )
-}
-
-bool ChessBoard::CheckMate( const SquareID kingSq, const Board &cb )
+bool ChessBoard::CheckMate( const SquareID kingSq, Board cb )
 {
   bool checkmate = true;
   SquareID firstAttacker = attackingLocations[0];
  
   if( attackingLocations.size > 1 ){ // double check. Only esc is king move 
   }
-  else if( attackingLocations.size == 1 ){
+
+  /* If Single check, then see if checked player can take attacking piece,
+     block attack, or move king. */
+  if( attackingLocations.size == 1 ){      // if attacker can be taken...
     if( sqIsReachable( firstAttacker, ATTACK, cb ) ){
-      checkmate = false;
+      checkmate = false;                        // not checkmate
     }
   }
-  else{
+  else if{                                       // if attacker blockable...
         SquareID dir = movingDir( firstAttacker, kingSq );
         SquareID blockSq = kingSq;
 
@@ -302,15 +290,42 @@ bool ChessBoard::CheckMate( const SquareID kingSq, const Board &cb )
         blockSq.first += dir.first;
         blockSq.second += dir.second;
         if( sqIsReachable( blockSq, BLOCK, cb ) ){
-          checkmate = false;
+          checkmate = false;                  // not checkmate
         }
       }while( blockSq != firstAttacker )
   }
-    
+  else{
+    ChessPiece *holdDetachedKing;
+    holdDetatchedKing = cb.find( KingSq )->second;
+  
+  }
+
   return checkmate;
-
-
 }
+
+bool::cannotMoveKing( const SquareID kingSq, const Board &cb ){
+  ChessPiece *king;
+  king = cb.find( kingSq )->second;
+  
+  bool fwd, bwd, left, right;
+  fwd = false; bwd = false; left = false; right = false;
+
+
+  SquareID fwqSq;
+  fwdSq.first = ( kingSq.first + UP );
+  fwdSq.second = ( kingSq.second );
+
+  if( king->tryMove( fwdSq, cb ) ){
+    fwd = true;
+  }
+  
+  SquareID bwdSq;
+  bwdSq.first = ( kingSq.first + DOWN );
+  bwdSq.fi
+  if( king->tryMove
+  
+}
+
 
 SquareID ChessBoard::movingDir( const SquareID attackerSq, const SquareID kingSq )
 {
