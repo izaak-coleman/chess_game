@@ -40,10 +40,17 @@ void ChessPiece::setCurrentLoc( SquareID destSq )
 bool ChessPiece::isNotBlocked( const SquareID destSq, SquareID nextSq, 
                                const SquareID direction, const Board &chessboard )
 {
+   cout << "isNotBlocked: nextRank " << nextSq.first << " nextFile "  << nextSq.second << endl;
   
   /* If reached destination, return true */
   if( destSq == nextSq ){
     return true;
+  }
+  
+  /* Return false if out of range */
+  if( nextSq.first == 9 || nextSq.second == 9 ||
+      nextSq.first == 0 || nextSq.second == 0 ){
+    return false;
   }
 
   /* Switch to stop recursive function checking the start location */

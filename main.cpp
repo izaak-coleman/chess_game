@@ -20,17 +20,6 @@ int main()
   cout << endl << endl << " Pawn moved " << endl;
   cb.display_board( cb.getBoard() );
 
-  cb.submitMove( "A1", "A3" );
-  cout << endl << endl << " Rook moved " << endl;
-  cb.display_board( cb.getBoard() );
-
-  cb.submitMove( "B1", "C3" );
-  cout << endl << endl << " Knight moved " << endl;
-  cb.display_board( cb.getBoard() );
-
-  cb.submitMove( "E1", "E5" );
-  cout << endl << endl << " Queen moved " << endl;
-  cb.display_board( cb.getBoard() );
 
   return 0;
 }

@@ -68,14 +68,6 @@ private:
      has a rank and file. The Subclass of ChessPiece assigned to the
      square corresponds to this rank and file. */
 
-  void print_row( const Board &cb, int rank );
-  /* Prints the chessboard to the screen. */
-  /* Sets up board with mapped chess pieces */
-
-  void print_frame();
-
-
-  
   bool invalidSourceSq( const SquareID sourceSq, const Board &cb );
   /* Returns false the chessPiece is not owned by the player. */
 
@@ -84,12 +76,45 @@ private:
    * the ChessPiece to a position that already contains a ChessPiece of 
    * their colour. Also checks destSq is in range.  */
 
+  bool inCheck( const SquareID kingSq, const Board &cb );
+  /* determines whether a player is in check */
+
+  bool inCheckMate( const SquareID kingSq );
+  /* Identifies whether player who owns KingSq is in checkmate */
+
+  bool pieceCanProtectKing( ChessPiece *friendly, const SquareID moveToSq,
+                            const SquareID moveFromSq, const SquareID kingSq );
+  /* If possible friendly piece to moveToSq. If an enemy piece is at
+   * moveToSq, the piece is detached and a pointer to it is stored. 
+   * If the piece has moved into a position that protects the king, 
+   * true is returned */
+  
+  ChessPiece* detachPiece( const SquareID detachFromSq );
+  /* Detaches a ChessPiece from the board at locatation detachFromSq.
+   * Returns the location of the piece in a pointer and sets the
+   * maps the detachFromSq with NULL in chessboard */
+  
+  bool ownsPiece( const SquareID sq, const Board &cb );
+  /* Returns true if the ChessPiece at sq is owned by the player 
+   * whos turn it is */
+
+  bool ownsPiece( const SquareID sq, const colour_t player, 
+                  const Board &cb );
+  /* Returns true if the ChessPiece at sq is same colour as 
+   * the function parameter player */
+
   bool outOfRange( const SquareID sq );
   /* Returns true if the rank and file of sq is not between 1-8 */
 
- // /*void updateBoard( ... ); */
- // bool displayGameStatus();
- // int  checkGameStatus();
- // Board updateBoard;
+  bool emptySquare( const SquareID sq, const Board &cb );
+  /* returns true of the sq contains no chesspieces */
+
+  void print_row( const Board &cb, int rank );
+  /* Prints the chessboard to the screen. */
+  /* Sets up board with mapped chess pieces */
+
+  void print_frame();
+
+
 };
 #endif
