@@ -22,14 +22,12 @@ bool Queen::tryMove( SquareID destSq, const Board &chessboard )
 
   /* Constrain movement directly forward or backward */
   if( currentLoc.second == destFile ){            // constant file
-      cout << "Forward_Backward run" << endl;
     if( isNotBlocked( destSq, currentLoc, dir, chessboard ) ){
       return true;                                // valid move
     }
   }
   /* Constrain movement to directly left or right */
   else if( currentLoc.first == destRank ){        // constant rank
-      cout << "Left-Right run" << endl;
     if( isNotBlocked( destSq, currentLoc, dir, chessboard ) ){
       return true;                                // valid move
     }
@@ -39,7 +37,6 @@ bool Queen::tryMove( SquareID destSq, const Board &chessboard )
   deltaRank = abs( destRank - currentLoc.first );
   deltaFile = abs( destFile - currentLoc.second );
   if( deltaRank == deltaFile ){
-      cout << "Diagonal run" << endl;
     if( isNotBlocked( destSq, currentLoc, dir, chessboard ) ){
       return true;                  // valid move
     }

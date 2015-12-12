@@ -21,7 +21,6 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
   
   /* If WHITE Pawn and destination is empty */
   if( colour == WHITE && chessboard.find( destSq )->second == NULL ){ 
-    cout << "WHTE PAWN NOT ENTERING HERE" << endl;
     /* If Pawn is at start position*/
     if( currentLoc.first == 2 && destRank == 4 && destFile == currentLoc.second ){
 
@@ -45,7 +44,6 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
     if( currentLoc.first == 7 && destRank == 5 && destFile == currentLoc.second ){
 
       if ( isNotBlocked( destSq, currentLoc, dir, chessboard) ){
-        cout << "33333333" << endl;
         return true;
       }
     }
@@ -53,14 +51,12 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
     /* Otherwise, can only move one rank backward*/
     else if( ( destSq.first == currentLoc.first-1 ) &&
              ( destFile == currentLoc.second ) ) {
-      cout << "222222222222" << endl;
       return true;
     }
   } 
 
   /* Valid diag move if moved only one space and contains oposite colour */ 
   if( chessboard.find( destSq )->second != NULL && diagMov( destSq ) ){
-      cout << "11111111111" << endl;
       return true;
   }
 

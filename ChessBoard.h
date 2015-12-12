@@ -82,6 +82,9 @@ private:
   bool inCheckMate( SquareID kingSq );
   /* Identifies whether player who owns KingSq is in checkmate */
 
+  bool staleMate( SquareID kingSq );
+  /* Returns true if the king at kingSq is in stalemate */
+
   bool pieceCanProtectKing( ChessPiece *friendly, SquareID moveToSq,
                             const SquareID moveFromSq, SquareID kingSq );
   /* If possible friendly piece to moveToSq. If an enemy piece is at
