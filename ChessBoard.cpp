@@ -318,7 +318,7 @@ bool ChessBoard::inCheckMate( const SquareID kingSq ){
       friendSq.first = rank;
       friendSq.second = file; 
     
-      /* If square is empty or non-friendly continue and not the king */ 
+      /* If square is empty or non-friendly or the king itself, continue */ 
       if( emptySquare( friendSq, chessboard ) ||
           !ownsPiece( friendSq, kingCol, chessboard ) ||
           friendSq == kingSq ){
@@ -351,10 +351,21 @@ bool ChessBoard::pieceCanProtectKing( ChessPiece *friendly,
                                          const SquareID moveFromSq,
                                          const SquareID kingSq ){
 
-  ChessPiece *detached;
+  ChessPiece *detached, *kingPiece;
+  kingPiece = chessboard.find( kingSq )->second;
+  colour_t kingCol = kingPiece->getColour();
+  bool notOwnPiece = false;
+
+  /* If the square the friendly will move to is not the same colour as the
+   * friendly, set notOwnPiece to true */
+  if( emptySquare( moveToSq, chessboard ) || 
+      !ownsPiece( moveToSq, kingCol, chessboard ) ){
+      notOwnPiece = true;
+  }
 
   /* If friendly peice can be moved into position */
-  if( friendly->tryMove( moveToSq, chessboard ) && (moveToSq != moveFromSq) ){
+  if( friendly->tryMove( moveToSq, chessboard ) && 
+      (moveToSq != moveFromSq) && notOwnPiece ){
     /* Detatch and store any enemy piece that may be there */
     detached = detachPiece( moveToSq );
     movePiece( friendly, moveToSq );     // move the friendly peice
