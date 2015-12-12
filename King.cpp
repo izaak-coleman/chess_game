@@ -27,6 +27,10 @@ bool King::tryMove( SquareID destSq, const Board &chessboard )
   if( deltaRank == 0 && deltaFile == 1 ){
     return true;
   }
+  /* Constrain movement to onespace diagonal */
+  if( deltaRank == 1 && deltaFile == 1 ){
+    return true;
+  }
   
   return false;
 }

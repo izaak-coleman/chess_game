@@ -21,9 +21,9 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
   
   /* If WHITE Pawn and destination is empty */
   if( colour == WHITE && chessboard.find( destSq )->second == NULL ){ 
-
+    cout << "WHTE PAWN NOT ENTERING HERE" << endl;
     /* If Pawn is at start position*/
-    if( currentLoc.first == 2 && destRank == 4 && destFile == destSq.second ){
+    if( currentLoc.first == 2 && destRank == 4 && destFile == currentLoc.second ){
 
         if ( isNotBlocked( destSq, currentLoc, dir, chessboard) ){
           return true;

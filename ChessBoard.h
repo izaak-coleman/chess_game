@@ -79,11 +79,11 @@ private:
   bool inCheck( const SquareID kingSq, const Board &cb );
   /* determines whether a player is in check */
 
-  bool inCheckMate( const SquareID kingSq );
+  bool inCheckMate( SquareID kingSq );
   /* Identifies whether player who owns KingSq is in checkmate */
 
-  bool pieceCanProtectKing( ChessPiece *friendly, const SquareID moveToSq,
-                            const SquareID moveFromSq, const SquareID kingSq );
+  bool pieceCanProtectKing( ChessPiece *friendly, SquareID moveToSq,
+                            const SquareID moveFromSq, SquareID kingSq );
   /* If possible friendly piece to moveToSq. If an enemy piece is at
    * moveToSq, the piece is detached and a pointer to it is stored. 
    * If the piece has moved into a position that protects the king, 
