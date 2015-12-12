@@ -42,22 +42,25 @@ bool Pawn::tryMove( SquareID destSq, const Board &chessboard )
   if( colour == BLACK && chessboard.find( destSq )->second == NULL ){
 
     /* If Pawn is at start position, moving two spaces backward is valid */
-    if( currentLoc.first == 7 && destRank == 5 && destFile == destSq.second ){
+    if( currentLoc.first == 7 && destRank == 5 && destFile == currentLoc.second ){
 
       if ( isNotBlocked( destSq, currentLoc, dir, chessboard) ){
+        cout << "33333333" << endl;
         return true;
       }
     }
 
-    /* Otherwise, can only move one place backward*/
+    /* Otherwise, can only move one rank backward*/
     else if( ( destSq.first == currentLoc.first-1 ) &&
              ( destFile == currentLoc.second ) ) {
+      cout << "222222222222" << endl;
       return true;
     }
   } 
 
   /* Valid diag move if moved only one space and contains oposite colour */ 
   if( chessboard.find( destSq )->second != NULL && diagMov( destSq ) ){
+      cout << "11111111111" << endl;
       return true;
   }
 

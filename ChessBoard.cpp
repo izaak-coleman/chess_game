@@ -63,15 +63,15 @@ pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
       cp = new Bishop( WHITE, "WB", currentLoc );
       return pair< SquareID, ChessPiece* > ( square, cp );
     }
-    else if( rank == 1 && (file == 4 ) ){
+    else if( rank == 1 && (file == 4 ) ) {
+      SquareID currentLoc ( rank, file );
+      cp = new Queen( WHITE, "WQ", currentLoc );
+      return pair< SquareID, ChessPiece* > ( square, cp );
+    }
+    else if( rank == 1 && (file == 5 ) ){
       SquareID currentLoc ( rank, file );
       cp = new King( WHITE, "WK", currentLoc );
       whiteKing = currentLoc;                   // Keep track of white king
-      return pair< SquareID, ChessPiece* > ( square, cp );
-    }
-    else if( rank == 1 && (file == 5 ) ) {
-      SquareID currentLoc ( rank, file );
-      cp = new Queen( WHITE, "WQ", currentLoc );
       return pair< SquareID, ChessPiece* > ( square, cp );
     }
     else if( rank == 2 && ( file >= 1 && file <= 8 ) ){
@@ -106,13 +106,13 @@ pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
     }
     else if( rank == 8 && (file == 4 ) ){
       SquareID currentLoc ( rank, file );
-      cp = new King( BLACK, "BK", currentLoc );
-      blackKing = currentLoc;                   // keep track of black king
+      cp = new Queen( BLACK, "BQ", currentLoc );
       return pair< SquareID, ChessPiece* > ( square, cp );
     }
     else if( rank == 8 && (file == 5 ) ){
       SquareID currentLoc ( rank, file );
-      cp = new Queen( BLACK, "BQ", currentLoc );
+      cp = new King( BLACK, "BK", currentLoc );
+      blackKing = currentLoc;                   // keep track of black king
       return pair< SquareID, ChessPiece* > ( square, cp );
     }
     else if( rank == 7 && ( file >=1 && file <= 8 ) ){
@@ -205,7 +205,6 @@ bool ChessBoard::submitMove( const string source, const string dest )
     }
 
     if( turn == WHITE ){
-      cout << "Start on black in here, so problem with check mate" << endl;
       if( inCheckMate( blackKing ) ){
         cout << "Black is in checkmate";
         /* resetboard()*/
@@ -216,7 +215,7 @@ bool ChessBoard::submitMove( const string source, const string dest )
     }
   }
 
-  // turn =  ( ( turn == WHITE ) ? BLACK : WHITE );     // switch turns
+  turn =  ( ( turn == WHITE ) ? BLACK : WHITE );     // switch turns
   return true;
   
 }
@@ -300,7 +299,7 @@ bool ChessBoard::inCheck( const SquareID kingSq, const Board &cb )
       }
     }
   }
- return false;
+ return inCheck;    // els, not in check
 }
 
 bool ChessBoard::inCheckMate( const SquareID kingSq ){
@@ -310,7 +309,7 @@ bool ChessBoard::inCheckMate( const SquareID kingSq ){
   colour_t kingCol = kingPiece->getColour();
 
   SquareID friendSq, moveToSq;
-  bool checkMate = true;
+  bool checkMate = inCheck( kingSq, chessboard );
 
   /* Loop through board and find all friendly pieces */
   for( int rank=1; rank <= 8; rank++ ){
