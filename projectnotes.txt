@@ -1,8 +1,0 @@
-to do
- - need to move charpiece to private
- - move shared constraints to ChessPiece
- - need to design check mate
- - need to switch turns if move valid, and not switch if not valid
-
- - need to add handler for map insert fail
- 
