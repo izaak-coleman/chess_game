@@ -7,9 +7,9 @@
 # include "ChessPiece.h"
 
 class Pawn: public ChessPiece{
-/* WHITE and BLACK Pawns fill ranks 2 and 7 resepectively, at the start o
- * of the game. Pawn can check if the destination square can be reached given
- * pawn movement constraints. */
+/* The Pawn can move forwards. It can move two spaces if at starting 
+ * position, else one. It can also move diagonaly one space. Only when
+ * taking an enemy piece. The Pawn class defined these constraints. */
 
 public:
   Pawn( colour_t _col, std::string _cp, SquareID _loc );

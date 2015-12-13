@@ -26,12 +26,13 @@ ChessBoard::ChessBoard()
 void ChessBoard::loadStartPositions()
 {
   pair< Board::iterator, bool > validInsert;
-  
-  for( int rank=1; rank <= MAX_RANK; rank++ ){ // cycle board allocating pieces
+  /* Allocate ChessPieces to Board. */
+  for( int rank=1; rank <= MAX_RANK; rank++ ){
     for( int file=1; file <= MAX_FILE; file++ ){  
-
-      SquareID square ( rank, file );             // Generate a square 
-      validInsert = chessboard.insert( allocatePiece( square ) );
+  
+      /* Map ChessPieces to squares in chessboard. */
+      SquareID square ( rank, file ); 
+      validInsert = chessboard.insert( allocatePiece( square ) ); 
 
       if( validInsert.second == false ){    // check valid mapping, exit if fail 
         cerr << "Problem mapping chess pieces to chessboard." << endl;
@@ -50,7 +51,7 @@ void ChessBoard::resetBoard()
     for( int file=1; file <= MAX_FILE; file++ ){
 
       SquareID square ( rank, file );
-      piece = chessboard.find( square )->second;
+      piece = chessboard.find( square )->second;    // get pointer val
       delete piece;
       chessboard.find( square )->second = NULL;
     }
@@ -161,39 +162,40 @@ bool ChessBoard::submitMove( const string source, const string dest )
   SquareID sourceSq ( (source.at(1)-48), (source.at(0)-64) );
   SquareID destSq   ( (dest.at(1)-48), (dest.at(0)-64) );
 
-  /* Returns false, if the players move is incorrect. Does not 
-   * take into account the validity of the move according to the 
-   * specific chesspiece */
   if( invalidSourceSq( sourceSq, chessboard ) || 
       invalidDestSq( destSq, chessboard ) ) {
      return validMove;
   }
-
-  /* Otherwise, see if chesspiece at source can reach dest, taking into account
-   * its movement constraints */
-  ChessPiece *movingPiece;          
-  movingPiece = chessboard.find( sourceSq )->second;    // get piece at sourceSq
   
-  /* Try and move ChessPiece to destination square. If it can move to 
-   * destination, check if king is put in check */
-  if( movingPiece->tryMove( destSq, getBoard() ) ){     // if can move to destSq
+  /* Access the chess piece the player wishes to move. */
+  ChessPiece *movingPiece;          
+  movingPiece = chessboard.find( sourceSq )->second;    
+  
+  /* Determine if chesspiece at source can reach dest, taking into account
+   * its movement constraints */
+  if( movingPiece->tryMove( destSq, getBoard() ) ){ // if can move to destSq...
   
     ChessPiece *detachedPiece;          
-    detachedPiece = detachPiece( destSq );    // detach the peice at destination
-    movePiece( movingPiece, destSq );         // move the piece
+    detachedPiece = detachPiece( destSq ); // detach the peice at destination...
+    movePiece( movingPiece, destSq );      // move the piece at source...
 
-    if( turn == WHITE ){
+    if( turn == WHITE ){                   // if moving the king, update pos
       if( sourceSq == whiteKing ){
-        whiteKing = destSq;                // update white king when moved
+        whiteKing = destSq;
       }
-      if( inCheck( whiteKing, chessboard ) ){
-        movePiece( movingPiece, sourceSq );   // move piece back to source
-        chessboard.find( destSq )->second = detachedPiece;  // reattach piece
-        if( whiteKing == destSq ){            // return the king
+      if( inCheck( whiteKing, chessboard ) ){ // if move endangers king...
+        movePiece( movingPiece, sourceSq );   // move piece back to source...
+        chessboard.find( destSq )->second = detachedPiece;  // reattach piece...
+        if( whiteKing == destSq ){            // return the king if moved
           whiteKing = sourceSq;
         }
+        /* Display invalid move message */
+        cout << "White's " << movingPiece->charpiece << " cannot move "
+             << "to " << static_cast<char> (destSq.second+64)
+             << destSq.first << "!" << endl;
       }
-      else{                                   // if valid, delete piece at dest
+      else{ // move does not endanger king, so valid. 
+        /* Display valid move message */
         cout << "White's " << movingPiece->charpiece << " moves from "
              << static_cast<char> (sourceSq.second+64) << sourceSq.first
              << " to " << static_cast<char> (destSq.second+64)
@@ -204,13 +206,13 @@ bool ChessBoard::submitMove( const string source, const string dest )
         else{
           cout << endl;
         }
-        delete detachedPiece;
+        delete detachedPiece;                 // take enemy chesspiece at dest
         detachedPiece = NULL;
         validMove = true;
       }
     }
 
-    if( turn == BLACK ){
+    if( turn == BLACK ){          // perform same actions if turn is black
       if( sourceSq == blackKing ){
         blackKing = destSq;
       }
@@ -220,6 +222,9 @@ bool ChessBoard::submitMove( const string source, const string dest )
         if( blackKing == destSq ){
           blackKing = sourceSq;
         }
+        cout << "Black's " << movingPiece->charpiece << " cannot move "
+             << "to " << static_cast<char> (destSq.second+64)
+             << destSq.first << "!" << endl;
       }
       else{
         cout << "Black's " << movingPiece->charpiece << " moves from "
@@ -239,7 +244,7 @@ bool ChessBoard::submitMove( const string source, const string dest )
       }
     }
   }
-  else{
+  else{   // ChessPiece cannot reach dest, display invalid move 
     cout << ( ( movingPiece->getColour() == WHITE ) ? "White's " : "Black's " ) 
          << movingPiece->charpiece << " cannot move "
          << "to " << static_cast<char> (destSq.second+64)
@@ -248,9 +253,10 @@ bool ChessBoard::submitMove( const string source, const string dest )
 
 
   if( validMove ){ 
-
+  
+    /* Check if opponent is in check, checkmate or stalemate */
     if( turn == BLACK && inCheck( whiteKing, chessboard ) ){
-      if( inCheckMate( whiteKing ) ){        // check if oponent is in checkmate
+      if( inCheckMate( whiteKing ) ){           
         cout << "White is in checkmate" << endl;
        return true;
       }
@@ -287,11 +293,12 @@ bool ChessBoard::staleMate( SquareID kingSq ){
   bool staleMate = true;
   ChessPiece *kingPiece;
   kingPiece = chessboard.find( kingSq )->second;
-  colour_t kingCol = kingPiece->getColour();
+  colour_t kingCol = kingPiece->getColour();        // get the colour of king
   ChessPiece *friendly, *detached;
+
   /* Find all pieces of player */
-  for( int rank=1; rank <=8; rank++ ){
-    for( int file=1; file <=8; file++ ){
+  for( int rank=1; rank <= MAX_RANK; rank++ ){
+    for( int file=1; file <= MAX_FILE; file++ ){
       SquareID friendSq( rank, file );
 
       if( emptySquare( friendSq, chessboard ) ||
@@ -301,29 +308,25 @@ bool ChessBoard::staleMate( SquareID kingSq ){
       else{ // piece belongs to player
 
         friendly = chessboard.find( friendSq )->second;
-        /* If the friendly piece can make a legal move, 
-         * it is not stalemate*/
-        for( int rank=1; rank <= 8; rank++ ){
-          for( int file=1; file <= 8; file++ ){
+        for( int rank=1; rank <= MAX_RANK; rank++ ){
+          for( int file=1; file <= MAX_FILE; file++ ){
             SquareID destSq( rank, file );
-
-
-            /* If friendly can move to destSq, 
-             * does the move endanger king*/
+            
+            /* Determine if the moving the friendly piece is possible */
             if( (emptySquare( destSq, chessboard ) || 
                 !ownsPiece( destSq, kingCol, chessboard ) ) &&
                 friendly->tryMove( destSq, chessboard ) ){ 
 
               detached = detachPiece( destSq );
-              movePiece( friendly, destSq );
+              movePiece( friendly, destSq );         // move the friendly 
               if( friendSq == kingSq ){              // if king, update position
                 kingSq = destSq;
               }
 
-              if( !inCheck( kingSq, chessboard ) ){  // check if move is legal
+              if( !inCheck( kingSq, chessboard ) ){  // if king not endangered...
                 movePiece( friendly, friendSq );
                 chessboard.find( destSq )->second = detached;
-                staleMate = false;                   // if legal, not stalmate
+                staleMate = false;                   // then not stalemate
                 return staleMate;
               }
               else{                        // reattach pieces and keep searching
@@ -403,69 +406,62 @@ bool ChessBoard::invalidDestSq( const SquareID destSq, const Board &cb )
 
 bool ChessBoard::inCheck( const SquareID kingSq, const Board &cb )
 {
-  SquareID searchSq;
   bool inCheck = false;
 
   ChessPiece *enemyPiece, *kingPiece;
   kingPiece = cb.find( kingSq )->second;
   colour_t kingCol = kingPiece->getColour();
 
-  /* Return true if enemy can attack king */
-  for( int rank=1; rank <= 8; rank++ ){
-    for( int file=1; file <= 8; file++ ){
-      searchSq.first = rank;
-      searchSq.second = file; 
+  /* Seach board for an enemy that can attack king */
+  for( int rank=1; rank <= MAX_RANK; rank++ ){
+    for( int file=1; file <= MAX_FILE; file++ ){
+      SquareID searchSq ( rank, file );
 
-      /* If empty square or not an enemy chesspeice continue searching  */
       if( emptySquare( searchSq, cb ) || ownsPiece( searchSq, kingCol, cb ) ){
         continue;
       }
       else{
         enemyPiece = cb.find( searchSq )->second;
-        
-        if( enemyPiece->tryMove( kingSq, cb ) ){ 
+        if( enemyPiece->tryMove( kingSq, cb ) ){   // if enemy can reach king...
           inCheck = true;
-          return inCheck;
+          return inCheck;                          // king in check
         }
       }
     }
   }
- return inCheck;    // els, not in check
+ return inCheck;    // not in check, nothing can attack king
 }
 
 bool ChessBoard::inCheckMate( SquareID kingSq ){
 
   ChessPiece *friendlyPiece, *kingPiece;
   kingPiece = chessboard.find( kingSq )->second;
-  colour_t kingCol = kingPiece->getColour();
+  colour_t kingCol = kingPiece->getColour();      // get king colour
 
-  SquareID friendSq, moveToSq;
   bool checkMate = true;
 
-  /* Loop through board and find all friendly pieces */
-  for( int rank=1; rank <= 8; rank++ ){
-    for( int file=1; file <= 8; file++ ){
-      friendSq.first = rank;
-      friendSq.second = file; 
-    
-      /* If square is empty or non-friendly or the king itself, continue */ 
+  /* Find all friendly pieces */
+  for( int rank=1; rank <= MAX_RANK; rank++ ){
+    for( int file=1; file <= MAX_FILE; file++ ){
+
+      SquareID friendSq ( rank, file );
       if( emptySquare( friendSq, chessboard ) ||
           !ownsPiece( friendSq, kingCol, chessboard ) ){
         continue;
       }
       else{                                       // must be a friendly
   
-        friendlyPiece = chessboard.find( friendSq )->second;
         /* Loop through all positions, and see if friendlyPiece can move
            to a position that protects the king */
-        for( int rank=1; rank <= 8; rank++ ){
-          for( int file=1; file <= 8; file++ ){
-            moveToSq.first = rank;        // get next sqaure coordinates
-            moveToSq.second = file; 
+        friendlyPiece = chessboard.find( friendSq )->second;
+        for( int rank=1; rank <= MAX_RANK; rank++ ){
+          for( int file=1; file <= MAX_FILE; file++ ){
+
+            SquareID moveToSq ( rank, file );
             if( pieceCanProtectKing( friendlyPiece, moveToSq, friendSq, kingSq ) ){
               checkMate = false;
               return checkMate;      // finish loop when found first
-            }                             // friendly that can help
+            }                        // friendly that can help
           }
         }
       }
@@ -484,8 +480,6 @@ bool ChessBoard::pieceCanProtectKing( ChessPiece *friendly,
   colour_t kingCol = kingPiece->getColour();
   bool notOwnPiece = false;
 
-  /* If the square the friendly will move to is not the same colour as the
-   * friendly, set notOwnPiece to true */
   if( emptySquare( moveToSq, chessboard ) || 
       !ownsPiece( moveToSq, kingCol, chessboard ) ){
       notOwnPiece = true;
@@ -502,7 +496,6 @@ bool ChessBoard::pieceCanProtectKing( ChessPiece *friendly,
     if( moveFromSq == kingSq ){
         kingSq = moveToSq;
     } 
-
 
     /* If the friendly can thwart check from new position, no check mate */
     if( !inCheck( kingSq, chessboard ) ){ 
@@ -584,47 +577,12 @@ colour_t ChessBoard::getTurn()
   return turn;
 }
 
-/* internal helper function */
-void ChessBoard::print_frame() {
-    cout << "  +===========+===========+" << endl;
-}
-
-/* internal helper function */
-void ChessBoard::print_row( const Board &cb, int rank ) {
-  cout << static_cast< char > ( 48+rank ) << " ";
-  for ( int file = 1; file <= MAX_FILE; file++ ) {
-    cout << "|";
-    SquareID square ( rank, file );
-    ChessPiece *piece = cb.find( square )->second;
-    if( ( piece != NULL ) ){
-      cout << piece->charpiece;
-    }
-    else{
-      cout << "e ";
-    }
-  }
-  cout << "|" << endl;
-}
-
-/* pre-supplied function to display a Sudoku board */
-void ChessBoard::display_board( const Board &cb ){
-  cout << "   ";
-  for (int file = 1; file <= MAX_FILE; file++) 
-    cout << static_cast<char> (64+file) << "  ";
-  cout << endl;
-  for (int rank = 1; rank <= MAX_RANK; rank++) {
-    print_frame();
-    print_row( cb, rank );
-  }
-  print_frame();
-}
-
 ChessBoard::~ChessBoard()
 {
   ChessPiece *piece;
   /* Delete all remaining peices on board */
-  for( int rank=1; rank <= 8; rank++ ){
-    for( int file=1; file <= 8; file++ ){
+  for( int rank=1; rank <= MAX_RANK; rank++ ){
+    for( int file=1; file <= MAX_FILE; file++ ){
       SquareID square ( rank, file );
       piece = chessboard.find( square )->second;
       delete piece;

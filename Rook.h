@@ -7,6 +7,9 @@
 # include "ChessPiece.h"
 
 class Rook: public ChessPiece{
+/* Rook moves any distance along either a rank, or a file.
+ * Rook class sets these constraints. */
+
 
 public:
   Rook( colour_t _col, std::string _cp, SquareID _loc );

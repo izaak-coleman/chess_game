@@ -1,5 +1,5 @@
 # include <iostream>
-# include <string> /* std::string */
+# include <string>
 # include <utility>
 # include <cmath>
 

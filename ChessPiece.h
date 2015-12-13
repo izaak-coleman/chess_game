@@ -1,10 +1,15 @@
 #ifndef CHESSPIECE_H
 #define CHESSPIECE_H
-# include <string> /* std::string */
+
+# include <string> 
 
 # include "Types.h"
 
 class ChessPiece{
+/* ChessPiece is the base class of all non-abstract derived ChessPieces.
+ * ChessPiece class holds the location and colour of the piece. 
+ * A virtual function tryMove() is declared, that is used to constrain 
+ * the movement of the derived peices. */
 private:
 protected:
   /* Class attributes */
@@ -20,9 +25,9 @@ protected:
    * currentLoc to destSq is not blocked by another ChessPiece. 
    * The blocking ChessPiece could be of either colour. */
   
-  SquareID movingDir( SquareID destSq );   // isNotBlocked helper function
-  /* Determine direction ChessPiece is moving and outputs a string encoding
-   * direction */
+  SquareID movingDir( SquareID destSq );
+  /* Determine direction ChessPiece is moving and outputs the relative
+   * position of the next square towards destSq, from currenLoc */
 
 
 public:

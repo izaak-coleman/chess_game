@@ -1,7 +1,7 @@
 // ChessPiece.cpp
 
 # include <iostream>
-# include <string> /* std::string */
+# include <string>
 # include <map>
 # include <utility>
 # include <string>

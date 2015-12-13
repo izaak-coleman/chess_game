@@ -7,6 +7,8 @@
 # include "ChessPiece.h"
 
 class Bishop: public ChessPiece{
+/* Bishop can move any number of ranks or files in a diagonal direction.
+ * The Bishop class sets these movement constraints */
 
 public:
   Bishop( colour_t _col, std::string _cp, SquareID _loc );

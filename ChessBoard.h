@@ -3,9 +3,9 @@
 # ifndef CHESSBOARD_H
 # define CHESSBOARD_H
 
-# include <map>       /* std::map */
-# include <utility>   /* std::pair */
-# include <string>    /* std::string */
+# include <map> 
+# include <utility>
+# include <string>
 # include <vector>
 
 # include "Types.h"
@@ -15,14 +15,18 @@ static const int MAX_RANK = 8;
 static const int MAX_FILE = 8;
 
 class ChessBoard{
-/* Describe ChessBoard in here */ 
+/* ChessBoard generates and holds an map, each square on a chessboard
+ * to a ChessPiece pointer. Upon construction of ChessBoard, the ChessPiece
+ * objects are generated. Functions of this class are centerd around
+ * manipulation of the chesspieces and idenifying: validity of moves,
+ * check, checkmate and stalemate. */
 private:
 
   /* Attributes */
   colour_t turn;          // Switches after each successful turn
-  Board chessboard;       // Chessboard maps squares to chesspieces
-  SquareID whiteKing;     // location of white king
-  SquareID blackKing;     // location of black king
+  Board chessboard;       // Maps squares to chesspieces
+  SquareID whiteKing;     // Location of white king
+  SquareID blackKing;     // Location of black king
 
   /* Member Functions */
 
@@ -86,12 +90,6 @@ private:
   bool emptySquare( const SquareID sq, const Board &cb );
   /* returns true of the sq contains no chesspieces */
 
-  void print_row( const Board &cb, int rank );
-  /* Prints the chessboard to the screen. */
-  /* Sets up board with mapped chess pieces */
-
-  void print_frame();
-
 public:
 
   /* Member Functions */
@@ -109,10 +107,6 @@ public:
   /* Function deletes any remaining chesspieces from memory from 
    * previous game and then creates and sets up the chessPieces 
    * for a new game */
-
-
-  void display_board( const Board &cb );
-  /* Visual display of the chessboard. */
 
   Board getBoard();
   /* Returns the chessboard */
