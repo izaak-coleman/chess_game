@@ -1,6 +1,7 @@
 # include <iostream>/* std::cin, std::cout, std::cerr */
 # include <utility> /* std::pair */
 # include <string>  /* std::string */
+# include <cstdlib>
 
 # include "Types.h" 
 # include "ChessBoard.h"
