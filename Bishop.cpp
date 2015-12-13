@@ -34,3 +34,5 @@ bool Bishop::tryMove( SquareID destSq, const Board &chessboard )
   /* Otherwise, move was illegal */
   return false;
 }
+
+Bishop::~Bishop(){}

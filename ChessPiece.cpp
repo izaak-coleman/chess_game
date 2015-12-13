@@ -77,48 +77,48 @@ SquareID ChessPiece::movingDir( SquareID destSq )
   int destRank = destSq.first;
   int destFile = destSq.second;
 
-  if( destRank > currentLoc.first ){       // traveling forwards ...
+  if( destRank > currentLoc.first ){                // traveling forwards ...
 
     if( destFile == currentLoc.second ){
-      SquareID direction ( 1, 0 );
+      SquareID direction ( UP, 0 );
       return direction;
     
     } 
     else if( destFile > currentLoc.second ){
-      SquareID direction ( 1, 1 );                  // and to the right
+      SquareID direction ( UP, RIGHT );                  // and to the right
       return direction;
     }
     else if( destFile < currentLoc.second ){
-      SquareID direction ( 1, -1 );                 // and to the left
+      SquareID direction ( UP, LEFT );                 // and to the left
       return direction;
     }
   }
 
-  else if( destRank < currentLoc.first ){ // traveling backwards ...
+  else if( destRank < currentLoc.first ){           // traveling backwards ...
     
     if( destFile == currentLoc.second ){
-      SquareID direction ( -1, 0 ); 
+      SquareID direction ( DOWN, 0 ); 
       return direction;
     }
     else if( destFile > currentLoc.second ){
-      SquareID direction ( -1, 1 );            // and to the right
+      SquareID direction ( DOWN, RIGHT );            // and to the right
       return direction;
     }
     else if( destFile < currentLoc.second ){
-      SquareID direction ( -1, -1 );             // and to the left
+      SquareID direction ( DOWN, LEFT );             // and to the left
       return direction;
     }
   }
   
   /* Moving right */
   else if( (destRank == currentLoc.first) && (destFile > currentLoc.second) ){
-    SquareID direction ( 0, 1 );
+    SquareID direction ( 0, RIGHT );
     return direction;
   }
 
   /* Moving left */
   else if( ( destRank == currentLoc.first) && (destFile < currentLoc.second) ){
-    SquareID direction ( 0, -1 );
+    SquareID direction ( 0, LEFT );
     return direction;
   }
 }

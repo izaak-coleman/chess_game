@@ -12,6 +12,10 @@ public:
   Bishop( colour_t _col, std::string _cp, SquareID _loc );
 
   bool tryMove( SquareID destSq, const Board &chessboard );
+  /* Returns true if the Bishop can move to destSq, under bishop
+   * movement constraints. */
+
+  ~Bishop();
 };
 
 #endif

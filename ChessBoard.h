@@ -15,40 +15,14 @@ static const int MAX_RANK = 8;
 static const int MAX_FILE = 8;
 
 class ChessBoard{
-/* Describe ChessBoard in here */ public:
-
-  ChessBoard();
-  /* Calls loadStartPositions, sets move to WHITE */
-
-  bool submitMove( const std::string source, const std::string dest );
-  /* Moves ChessPiece from source to dest. Main gameplay function.
-   * Check piece at source, belongs to player whose turn it is to move.
-   * Checks if move is legal. If chesspiece at dest belongs to player 
-   * whos turn it is not, the peice will be taken (deleted) */
-
-
-  void display_board( const Board &cb );
-  /* Visual display of the chessboard. */
-
-  Board getBoard();
-  /* Returns the chessboard */
-  
-  colour_t getTurn();
-  /* Returns who needs to make the next move. */
-
-
+/* Describe ChessBoard in here */ 
 private:
-  static const bool ATTACK = 0;
-  static const bool BLOCK  = 1;
 
   /* Attributes */
   colour_t turn;          // Switches after each successful turn
   Board chessboard;       // Chessboard maps squares to chesspieces
-  SquareID sourceSq;      // Current location of the next piece to be moved
-  SquareID destSq;        // Destination of the next piece to be moved
   SquareID whiteKing;     // location of white king
   SquareID blackKing;     // location of black king
-  std::vector< SquareID > attackingLocations; // contains the locations of current king attack
 
   /* Member Functions */
 
@@ -118,6 +92,36 @@ private:
 
   void print_frame();
 
+public:
+
+  /* Member Functions */
+
+  ChessBoard();
+  /* Calls loadStartPositions, sets move to WHITE */
+
+  bool submitMove( const std::string source, const std::string dest );
+  /* Moves ChessPiece from source to dest. Main gameplay function.
+   * Check piece at source, belongs to player whose turn it is to move.
+   * Checks if move is legal. If chesspiece at dest belongs to player 
+   * whos turn it is not, the peice will be taken (deleted) */
+
+  void resetBoard();
+  /* Function deletes any remaining chesspieces from memory from 
+   * previous game and then creates and sets up the chessPieces 
+   * for a new game */
+
+
+  void display_board( const Board &cb );
+  /* Visual display of the chessboard. */
+
+  Board getBoard();
+  /* Returns the chessboard */
+  
+  colour_t getTurn();
+  /* Returns who needs to make the next move. */
+
+  ~ChessBoard();
+  /* Delete all ChessPiece on heap */
 
 };
 #endif

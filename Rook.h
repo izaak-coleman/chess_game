@@ -12,12 +12,9 @@ public:
   Rook( colour_t _col, std::string _cp, SquareID _loc );
 
   virtual bool tryMove( SquareID destSq, const Board &chessboard );
-  /* Check if destSq is accessable to Rook. Rook movement constrained
-   * to usual Rook rules. */
+  /* Returns true if the Rook can move to destSq, under the rook 
+   * movement constraints. */
 
   ~Rook();
-  /* Destructor*/
-  
-
 };
 #endif

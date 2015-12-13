@@ -11,5 +11,9 @@ public:
   
   
   bool tryMove( SquareID destSq, const Board &chessboard );
+  /* Returns true if the Knight can move to destSq, under the knight
+   * movement constraints. */
+
+  ~Knight();
 };
 #endif

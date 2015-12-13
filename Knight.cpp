@@ -33,3 +33,5 @@ bool Knight::tryMove( SquareID destSq, const Board &chessboard )
 
   return false;
 }
+
+Knight::~Knight(){}

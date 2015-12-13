@@ -35,4 +35,6 @@ bool King::tryMove( SquareID destSq, const Board &chessboard )
   return false;
 }
 
+King::~King(){}
+
 
