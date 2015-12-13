@@ -1,6 +1,6 @@
-# include <iostream>/* std::cin, std::cout, std::cerr */
-# include <utility> /* std::pair */
-# include <string>  /* std::string */
+# include <iostream>
+# include <utility>
+# include <string>
 # include <cstdlib>
 
 # include "Types.h" 
@@ -25,7 +25,7 @@ ChessBoard::ChessBoard()
 
 void ChessBoard::loadStartPositions()
 {
-  pair< Board::iterator, bool > validInsert;   // Info: validity of last insert
+  pair< Board::iterator, bool > validInsert;
   
   for( int rank=1; rank <= MAX_RANK; rank++ ){ // cycle board allocating pieces
     for( int file=1; file <= MAX_FILE; file++ ){  
@@ -33,7 +33,7 @@ void ChessBoard::loadStartPositions()
       SquareID square ( rank, file );             // Generate a square 
       validInsert = chessboard.insert( allocatePiece( square ) );
 
-      if( validInsert.second == false ){          // check validty, handle fail
+      if( validInsert.second == false ){    // check valid mapping, exit if fail 
         cerr << "Problem mapping chess pieces to chessboard." << endl;
         exit(1);
       }
@@ -48,6 +48,7 @@ void ChessBoard::resetBoard()
   /* Delete all remaining peices on board */
   for( int rank=1; rank <= MAX_RANK; rank++ ){
     for( int file=1; file <= MAX_FILE; file++ ){
+
       SquareID square ( rank, file );
       piece = chessboard.find( square )->second;
       delete piece;
