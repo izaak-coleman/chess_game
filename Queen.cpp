@@ -18,6 +18,7 @@ bool Queen::tryMove( SquareID destSq, const Board &chessboard )
   int destRank, destFile, deltaRank, deltaFile;
   destRank = destSq.first;  destFile = destSq.second;
   SquareID dir = movingDir( destSq );         // get direction
+  cout << "Queens traveling direction " << dir.first << " - " << dir.second << endl;
 
 
   /* Constrain movement directly forward or backward */
@@ -38,6 +39,7 @@ bool Queen::tryMove( SquareID destSq, const Board &chessboard )
   deltaFile = abs( destFile - currentLoc.second );
   if( deltaRank == deltaFile ){
     if( isNotBlocked( destSq, currentLoc, dir, chessboard ) ){
+      cout << "Queen can move to position" << destRank << " - " << destFile << endl;
       return true;                  // valid move
     }
   }

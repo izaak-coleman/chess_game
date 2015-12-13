@@ -229,77 +229,65 @@ bool ChessBoard::submitMove( const string source, const string dest )
 
 bool ChessBoard::staleMate( SquareID kingSq ){
 
-  bool staleMate = true, surroundedByFriendlies = true;
+  bool staleMate = true;
   ChessPiece *kingPiece;
   kingPiece = chessboard.find( kingSq )->second;
   colour_t kingCol = kingPiece->getColour();
-
   ChessPiece *friendly, *detached;
+  /* Find all pieces of player */
   for( int rank=1; rank <=8; rank++ ){
     for( int file=1; file <=8; file++ ){
       SquareID friendSq( rank, file );
-      if( emptySquare( friendSq) || !ownsPiece( friendSq, colour, chessboard ) ){
+
+      if( emptySquare( friendSq, chessboard ) ||
+          !ownsPiece( friendSq, kingCol, chessboard ) ){
         continue;
       }
-      else{
+      else{ // piece belongs to player
+
         friendly = chessboard.find( friendSq )->second;
+        /* If the friendly piece can make a legal move, 
+         * it is not stalemate*/
         for( int rank=1; rank <= 8; rank++ ){
-          for( int file=1; file <=8; file++ ){
-            if( (emptySquare( destSq ) || 
-                !ownsPiece( destSq, colour, chessboard ) ) &&
-                friendly->tryMove( destSq ) ){
+          for( int file=1; file <= 8; file++ ){
+            SquareID destSq( rank, file );
+
+
+            /* If friendly can move to destSq, 
+             * does the move endanger king*/
+            if( (emptySquare( destSq, chessboard ) || 
+                !ownsPiece( destSq, kingCol, chessboard ) ) &&
+                friendly->tryMove( destSq, chessboard ) ){ 
+
               detached = detachPiece( destSq );
               movePiece( friendly, destSq );
-              if( !inCheck( kingSq, chessboard ) ){
+              if( friendSq == kingSq ){              // if king, update position
+                kingSq = destSq;
+              }
+              cout << "DISPLAYBOARD FROM STALEMATE" << endl;
+              display_board( chessboard );
+
+              cout << "kingSq = " << kingSq.first << " " << kingSq.second << endl;
+              cout << "destSq = " << destSq.first << " " << destSq.second << endl;
+
+              if( !inCheck( kingSq, chessboard ) ){  // check if move is legal
                 movePiece( friendly, friendSq );
                 chessboard.find( destSq )->second = detached;
-                staleMate = false;
+                cout << "Returning false because friendlySq " << friendSq.first
+                     << " - " << friendSq.second << "can be moved " << endl;
+                staleMate = false;                   // if legal, not stalmate
                 return staleMate;
               }
-              else{
+              else{                        // reattach pieces and keep searching
                 movePiece( friendly, friendSq );
                 chessboard.find( destSq )->second = detached;
+              }
+              if( destSq == kingSq ){     // if king, return to position in game
+                kingSq = friendSq;
               }
             }
           }
         }
-      }
-    }
-  }
-
-  /* Determine if the king is surrounded by friendly pieces */
-  for( int rank=1; rank <= 8; rank++ ){
-    for( int file=1; file <= 8; file++ ){
-      SquareID destSq ( rank, file );
-      if( (emptySquare( destSq, chessboard ) ||
-          !ownsPiece( destSq, kingCol, chessboard )) &&
-          kingPiece->tryMove( destSq, chessboard ) ){
-        surroundedByFriendlies = false;   // if not, set to false
-      }
-    }
-  }
-  if( surroundedByFriendlies ){        // staleMate cannot occur if king
-    staleMate = false;                 // surrounded by friendly pieces
-    return staleMate;
-  }
-
-
-  /* Determine if the king cannot make any legal moves */
-  for( int rank=1; rank <= 8; rank++ ){
-    for( int file=1; file <= 8; file++ ){
-      SquareID destSq ( rank, file );
-      if( (emptySquare( destSq, chessboard ) ||
-          !ownsPiece( destSq, kingCol, chessboard )) &&
-          kingPiece->tryMove( destSq, chessboard ) ){
-        
-        ChessPiece *detached;
-        detached = detachPiece( destSq );
-        movePiece( kingPiece, destSq );
-        if( !inCheck( destSq, chessboard ) ){
-          staleMate = false;
-        }
-        movePiece( kingPiece, kingSq );
-        chessboard.find( destSq )->second = detached;
       }
     }
   }
