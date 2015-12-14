@@ -1,4 +1,4 @@
-OBJ=main.o ChessBoard.o ChessPiece.o Pawn.o Rook.o Knight.o Bishop.o King.o Queen.o
+OBJ=ChessMain.o ChessBoard.o ChessPiece.o Pawn.o Rook.o Knight.o Bishop.o King.o Queen.o
 EXE=chess
 CXX=g++
 COMPFLAGS=-Wall -ggdb -MMD
