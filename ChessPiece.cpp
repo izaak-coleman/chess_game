@@ -121,6 +121,10 @@ SquareID ChessPiece::movingDir( SquareID destSq )
     SquareID direction ( 0, LEFT );
     return direction;
   }
+
+  // else impossible direction
+  SquareID direction (0,0);
+  return direction;
 }
 
 ChessPiece::~ChessPiece(){}

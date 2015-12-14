@@ -152,6 +152,9 @@ pair< SquareID, ChessPiece* > ChessBoard::allocatePiece( SquareID square )
       cp = new Pawn( BLACK, "Pawn", currentLoc );
       return pair< SquareID, ChessPiece* > ( square, cp );
   }
+  // else, error
+  cp = NULL;
+  return pair< SquareID, ChessPiece* > ( square, cp );
 }
 
 bool ChessBoard::submitMove( const string source, const string dest )
